@@ -11,11 +11,14 @@ public abstract class Customer extends User{
     }
 
     @Override
-    public boolean login(String rollNo, String password) throws InvalidLoginException {
-        if(!this.rollNo.equals(rollNo) || !this.password.equals(password)) {
-            throw new InvalidLoginException("Invalid userid or password");
-        }
-        return true;
+    public String getLoginID() {
+        return rollNo;
+    }
+
+    @Override
+    public void viewMenu() {
+        System.out.println("Regular Customer Menu");
+        // Add menu options specific to Regular Customer
     }
 
     public void viewOrderHistory(){

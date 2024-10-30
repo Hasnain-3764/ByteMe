@@ -1,28 +1,32 @@
 public class Admin extends User{
     private String adminId;
+
     public Admin(String name, String password, String adminId){
         super(name,password);
         this.adminId = adminId;
     }
 
     @Override
-    public boolean login(String adminId, String password) throws InvalidLoginException {
-        if(!this.adminId.equals(adminId) || !this.password.equals(password)) {
-            throw new InvalidLoginException("Invalid userid or password");
-        }
-        return true;
+    public String getLoginID() {
+        return adminId;
     }
-    public void manageMenu(){
+    @Override
+    public void viewMenu() {
+        System.out.println("Admin Menu");
+        // Add menu options specific to Admin
+    }
 
+    public void manageMenu(){
+        System.out.println("Admin Managing Menu");
     }
     public void processOrder(){
-
+        System.out.println("Admin Processing Order");
     }
     public void generateReport(){
-
+        System.out.println("Admin Generating Reports");
     }
-    public void processRefunt(Order order){
-
+    public void processRefund(Order order){
+        System.out.println("Admin Processing Refunds");
     }
 
 

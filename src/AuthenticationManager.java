@@ -1,29 +1,33 @@
+import java.util.Map;
 import java.util.Scanner;
+import java.util.HashMap;
 
 public class AuthenticationManager {
+    private Map<String, User> userMap;
     private static Scanner scanner = new Scanner(System.in);
+
     public AuthenticationManager(){
-
+        userMap = new HashMap<>();
+//        for(User user: )
     }
-    public void adminLogin(){
-        System.out.println("Enter your Unique Admin Id: ");
-        String adminId = scanner.nextLine();
-        System.out.println("Enter your password: ");
-        String password = scanner.nextLine();
-//        Admin admin = findAdmin(adminId);
-//        try{
-//            if(admin != null && admin.login(adminId,password)){
-//                System.out.println("Admin Login Successful");
-//            }
-//            else{
-//                throw new InvalidLoginException("AdminId not found");
-//            }
-//        }
-//        catch(InvalidLoginException e){
-//            System.out.println(" e");
-//        }
-
+    public User login(String id, String password) throws InvalidLoginException {
+        User user = userMap.get(id);
+        if (user != null && user.login(id, password)) {
+            return user;  // Login successful
+        }
+        throw new InvalidLoginException("Invalid email or password.");
     }
+
+    // Signup method
+    public void signup(User user) {
+        if (userMap.containsKey(user.getLoginID())) {
+            System.out.println("User already exists.");
+        } else {
+            userMap.put(user.getLoginID(), user);
+            System.out.println("Signup successful!");
+        }
+    }
+
     public void studentLogin(){
 
     }
