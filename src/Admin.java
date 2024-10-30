@@ -10,11 +10,7 @@ public class Admin extends User{
     public String getLoginID() {
         return adminId;
     }
-    @Override
-    public void viewMenu() {
-        System.out.println("Admin Menu");
-        // Add menu options specific to Admin
-    }
+
 
     public void manageMenu(){
         System.out.println("Admin Managing Menu");

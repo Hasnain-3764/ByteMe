@@ -6,7 +6,7 @@ public class VIPCustomer extends Customer{
 
     @Override
     public void placeOrder(Order order) {
-
+        System.out.println("fast fast ordering for vips.");
     }
     public void accessVIPBenefits(){
 

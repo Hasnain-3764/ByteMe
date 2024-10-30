@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
     private static AuthenticationManager authenticator = new AuthenticationManager();
     private static Scanner scanner = new Scanner(System.in);
-
+    private static TerminalInterface terminalInterface = new TerminalInterface();
 
     public static void main(String[] args) {
         while (true) {
@@ -29,7 +29,15 @@ public class Main {
 
         try{
             User user = authenticator.login(id,password);
-            user.viewMenu();
+            if(user instanceof Admin){
+                terminalInterface.showAdminMenu();
+            }
+            else if(user instanceof VIPCustomer){
+                terminalInterface.showVIPCustomerMenu();
+            }
+            else if(user instanceof RegularCustomer){
+                terminalInterface.showRegularCustomerMenu();
+            }
         } catch(InvalidLoginException e){
             System.out.println(e.getMessage());
         }
@@ -40,7 +48,7 @@ public class Main {
         System.out.println("2. VIP Customer");
         System.out.println("3. Regular Customer");
 
-        int choice = scanner.nextInt();
+        int choice = InputUtils.readInt("Enter your choice: ", 1, 3);
         System.out.println("Enter name: ");
         String name = scanner.next();
         System.out.println("Enter unique ID (Roll no for students, Admin ID for Admins): ");

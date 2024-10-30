@@ -2,17 +2,28 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Customer extends User{
-    private List<Order> orderHistory;
+public abstract class Customer extends User {
     private String rollNo;
-    public Customer(String name, String password, String role, String rollNo){
-        super(name,password,role);
-        this.orderHistory = new ArrayList<>();
-        this.rollNo = rollNo;
-    }
-    public void viewOrderHistory(){
+    private List<Order> orderHistory;
 
+    public Customer(String name, String password, String rollNo) {
+        super(name, password);
+        this.rollNo = rollNo;
+        this.orderHistory = new ArrayList<>();
     }
+    @Override
+    public void viewMenu() {
+        System.out.println("customer menu");
+    }
+    @Override
+    public String getLoginID() {
+        return rollNo;  // Returns rollNo as the unique login ID for Customer
+    }
+
+    public void viewOrderHistory() {
+        // Implement viewing order history
+    }
+
     public abstract void placeOrder(Order order);
 }
 
@@ -59,6 +70,22 @@ public class TerminalInterface {
 }
 
 
+// File: DataInitializer.java
+import java.util.ArrayList;
+import java.util.List;
+
+public class DataInitializer {
+    public static List<User> initilizeUsers(){
+        List<User> users = new ArrayList<>();
+        users.add(new Admin("Admin1","pswd1","A1"));
+        users.add(new VIPCustomer("vipUser1", "vipPswd1","2023325"));
+        users.add(new RegularCustomer("cust1","custPswd1","2023467"));
+
+        return users;
+    }
+}
+
+
 // File: Order.java
 public class Order {
 }
@@ -67,18 +94,55 @@ public class Order {
 // File: VIPCustomer.java
 public class VIPCustomer extends Customer{
 
-    public VIPCustomer(String name, String password, String role, String rollNo){
-        super(name, password, role, rollNo);
+    public VIPCustomer(String name, String password, String rollNo){
+        super(name, password, rollNo);
     }
 
     @Override
     public void placeOrder(Order order) {
-
+        System.out.println("fast fast ordering for vips.");
     }
     public void accessVIPBenefits(){
 
     }
 
+    @Override
+    public void viewMenu() {
+        System.out.println("Vip menu");
+    }
+}
+
+
+// File: AuthenticationManager.java
+import java.util.Map;
+import java.util.Scanner;
+import java.util.HashMap;
+
+public class AuthenticationManager {
+    private Map<String, User> userMap;
+    private static Scanner scanner = new Scanner(System.in);
+
+    public AuthenticationManager(){
+        userMap = new HashMap<>();
+//        for(User user: )
+    }
+    public User login(String id, String password) throws InvalidLoginException {
+        User user = userMap.get(id);
+        if (user != null && user.login(id, password)) {
+            return user;  // Login successful
+        }
+        throw new InvalidLoginException("Invalid email or password.");
+    }
+
+    // Signup method
+    public void signup(User user) {
+        if (userMap.containsKey(user.getLoginID())) {
+            System.out.println("User already exists.");
+        } else {
+            userMap.put(user.getLoginID(), user);
+            System.out.println("Signup successful!");
+        }
+    }
 }
 
 
@@ -87,50 +151,90 @@ public class VIPCustomer extends Customer{
 import java.util.Scanner;
 
 public class Main {
-
+    private static AuthenticationManager authenticator = new AuthenticationManager();
     private static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
 
-        while(true){
+    public static void main(String[] args) {
+        while (true) {
             System.out.println("Welcome to IIIT-D Canteen");
             System.out.println("1. Login");
             System.out.println("2. SignUp");
             System.out.println("3. Exit the Application");
-
             int choice = InputUtils.readInt("Enter your choice: ", 1, 3);
-
-            switch (choice){
-                case 1:
-//                    login();
-                    break;
-                case 2:
-//                    signup();
-                    break;
-                case 3:
-                    System.out.println("Bye, See you");
-                    return;
-                default:
-                    System.out.println("Invalid Input");
+            switch (choice) {
+                case 1 -> handleLogin();
+                case 2 -> handleSignup();
+                case 3 -> System.exit(0);
+                default -> System.out.println("Invalid choice, please try again.");
             }
         }
+    }
+    private static void handleLogin(){
+        System.out.println("Enter ID (Roll no for students, AdminID for admins): ");
+        String id = scanner.next();
+        System.out.println("Enter password: ");
+        String password = scanner.next();
+
+        try{
+            User user = authenticator.login(id,password);
+            user.viewMenu();
+        } catch(InvalidLoginException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    private static void handleSignup(){
+        System.out.println("Sign up as: ");
+        System.out.println("1. Admin");
+        System.out.println("2. VIP Customer");
+        System.out.println("3. Regular Customer");
+
+        int choice = scanner.nextInt();
+        System.out.println("Enter name: ");
+        String name = scanner.next();
+        System.out.println("Enter unique ID (Roll no for students, Admin ID for Admins): ");
+        String id = scanner.next();
+        System.out.println("Enter password: " );
+        String password = scanner.next();
+
+        User newUser = switch(choice){
+            case 1 -> new Admin(name, password, id);
+            case 2 -> new VIPCustomer(name, password, id);
+            case 3 -> new RegularCustomer(name, password, id);
+            default -> throw new IllegalArgumentException("Invalid argument");
+        };
+
+        authenticator.signup(newUser);
 
     }
 }
 
 // File: RegularCustomer.java
-public class RegularCustomer extends Customer{
+public class RegularCustomer extends Customer {
 
-    public RegularCustomer(String name, String password, String role, String rollNo){
-        super(name,password,role, rollNo);
+    public RegularCustomer(String name, String password, String rollNo) {
+        super(name, password, rollNo);
+    }
+
+    @Override
+    public void viewMenu() {
+        System.out.println("Regular Customer Menu");
+        // Add menu options specific to Regular Customer
+    }
+//
+    @Override
+    public String getLoginID(){
+        return "ab";
     }
 
     @Override
     public void placeOrder(Order order) {
-
+        // Implement order placement logic
+        System.out.println("Regular customer order here");
     }
-    public void accessRegularBenefits(){
 
+    public void accessRegularBenefits() {
+        // Regular customer-specific benefits
     }
 }
 
@@ -173,18 +277,32 @@ public interface ReportGenerator {
 }
 
 
+// File: InvalidLoginException.java
+public class InvalidLoginException extends Exception{
+    public InvalidLoginException(String message){
+        super(message);
+    }
+}
+
+
 // File: User.java
 public abstract class User {
     protected String name;
-    protected String rollNo;
     protected String password;
-    protected String role;
-    public User(String name, String password, String role){
+
+    public User(String name, String password) {
         this.name = name;
         this.password = password;
-        this.role = role;
     }
-    public String getName(){
+
+    public abstract String getLoginID();  // Each subclass will define its login ID
+    public abstract void viewMenu();      // Abstract method for role-specific menus
+
+    public boolean login(String id, String password) {
+        return this.getLoginID().equals(id) && this.password.equals(password);
+    }
+
+    public String getName() {
         return name;
     }
 
@@ -192,28 +310,12 @@ public abstract class User {
         this.name = name;
     }
 
-    public String getRollNo() {
-        return rollNo;
+    public String getPassword() {
+        return password;
     }
-
-    public void setRollNo(String rollNo) {
-        this.rollNo = rollNo;
-    }
-
-//    public String getPassword() {
-//        return password;
-//    }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }
 
@@ -221,22 +323,37 @@ public abstract class User {
 // File: Admin.java
 public class Admin extends User{
     private String adminId;
-    public Admin(String name, String password, String role, String adminId){
-        super(name,password,role);
+
+    public Admin(String name, String password, String adminId){
+        super(name,password);
         this.adminId = adminId;
     }
-    public void manageMenu(){
 
+    @Override
+    public String getLoginID() {
+        return adminId;
+    }
+    @Override
+    public void viewMenu() {
+        System.out.println("Admin Menu");
+        // Add menu options specific to Admin
+    }
+
+    public void manageMenu(){
+        System.out.println("Admin Managing Menu");
     }
     public void processOrder(){
-
+        System.out.println("Admin Processing Order");
     }
     public void generateReport(){
-
+        System.out.println("Admin Generating Reports");
     }
-    public void processRefunt(Order order){
-
+    public void processRefund(Order order){
+        System.out.println("Admin Processing Refunds");
     }
+
+
+
 }
 
 

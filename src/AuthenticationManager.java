@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.HashMap;
@@ -9,6 +10,10 @@ public class AuthenticationManager {
     public AuthenticationManager(){
         userMap = new HashMap<>();
 //        for(User user: )
+        List<User> initialUsers = DataInitializer.initilizeUsers();
+        for(User user: initialUsers){
+            userMap.put(user.getLoginID(), user);
+        }
     }
     public User login(String id, String password) throws InvalidLoginException {
         User user = userMap.get(id);
@@ -26,15 +31,5 @@ public class AuthenticationManager {
             userMap.put(user.getLoginID(), user);
             System.out.println("Signup successful!");
         }
-    }
-
-    public void studentLogin(){
-
-    }
-    public void studentSignUp(){
-
-    }
-    public void adminSignUp(){
-
     }
 }
