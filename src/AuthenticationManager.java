@@ -31,4 +31,15 @@ public class AuthenticationManager {
             System.out.println("Signup successful!");
         }
     }
+
+    public void upgradeToVIP(VIPCustomer vipCustomer){
+        String loginID = vipCustomer.getLoginID();
+        if(userMap.containsKey(loginID)){
+            userMap.put(loginID,vipCustomer);
+            System.out.println("User upgraded to VIP successfully.");
+        }
+        else{
+            System.out.println("User not found for upgrade.");
+        }
+    }
 }

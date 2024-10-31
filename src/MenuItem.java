@@ -49,6 +49,7 @@ public class MenuItem {
                 ", price=" + price +
                 ", type='" + type + '\'' +
                 ", availability=" + availability +
+                // ordering unavailabe food, can give in DishNotAvailableException(implement)
                 '}';
     }
 }

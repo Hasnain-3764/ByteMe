@@ -6,9 +6,11 @@ import java.util.Scanner;
 public class TerminalInterface {
     private final Scanner scanner;
     private final MenuService menuService;
+    private final AuthenticationManager authenticator;  // New field for AuthenticationManager
 
-    public TerminalInterface(MenuService menuService){
+    public TerminalInterface(MenuService menuService, AuthenticationManager authenticator){
         this.menuService = menuService;
+        this.authenticator = authenticator;
         this.scanner = new Scanner(System.in);
     }
 //    public void showMainMenu(){
@@ -100,7 +102,7 @@ public class TerminalInterface {
             System.out.println("5. Become a VIP");
             System.out.println("6. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 5);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 6);
 
             switch (choice) {
                 case 1 -> regularCustomer.browseMenu(); // to be implemented
@@ -111,8 +113,8 @@ public class TerminalInterface {
                 }
                 case 3 -> regularCustomer.placeOrder(new Order());
                 case 4 -> regularCustomer.viewOrderHistory();
-                case 5 -> accessVIPBenefits(); // special privelge for our vips
-                case 5 -> regularCustomer.accessRegularBenefits();
+                case 5 -> becomeVIP(regularCustomer); // special priveledge for our vips
+                case 6-> regularCustomer.accessRegularBenefits();
                 case 7 -> {
                     System.out.println("Logging out...");
                     return; //exit to main menu
@@ -122,6 +124,28 @@ public class TerminalInterface {
         }
     }
     // helper methods
+
+    private void becomeVIP(RegularCustomer regularCustomer){
+        System.out.println("To become a VIP, there is one-time upgrade fee.");
+        System.out.println("Do you wish to proceed? (yes/no)");
+        String response = scanner.next().trim().toLowerCase();
+
+        if(response.equals("yes")){
+            VIPCustomer vipCustomer = new VIPCustomer(
+                    regularCustomer.getName(),
+                    regularCustomer.getPassword(),
+                    regularCustomer.getLoginID()
+            );
+            authenticator.upgradeToVIP(vipCustomer);
+            showVIPCustomerMenu(vipCustomer);
+            System.out.println("Congratulations! You are now a VIP customer.");
+        }
+        else{
+            System.out.println("Upgrade to VIP cancelled");
+        }
+
+    }
+
     private MenuItem createNewItem(){
         System.out.println("Enter item name: ");
         String name = scanner.nextLine();
@@ -133,7 +157,7 @@ public class TerminalInterface {
         System.out.println("Enter item type: ");
         String type = scanner.nextLine();
 
-        System.out.println("Is it available? (yes/no):");
+        System.out.println("Is it available? (yes/no): ");
         String input = scanner.next().trim().toLowerCase();
         boolean availability = input.equals("yes");
         scanner.nextLine();
@@ -145,7 +169,7 @@ public class TerminalInterface {
         String name = scanner.nextLine();
         MenuItem item = menuService.searchItems(name).stream().findFirst().orElse(null);
         if(item == null){
-            System.out.println("Item not found!");
+            System.out.println("Item not found! ");
             return null;
         }
         System.out.println("Enter new price: ");
@@ -164,58 +188,23 @@ public class TerminalInterface {
         return scanner.nextLine();
     }
 
-
-//
-//    private void browseMenu() {
-//        List<MenuItem> items = menuService.getAllItems();
-//        if (items.isEmpty()) {
-//            System.out.println("No items available in the menu.");
-//        } else {
-//            System.out.println("Menu Items:");
-//            items.forEach(item -> System.out.printf("Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n--------------------\n",
-//                    item.getName(), item.getPrice(), item.getType(),
-//                    item.isAvailable() ? "Available" : "Unavailable"));
+//    private void searchMenuItems(){
+//        System.out.println("Enter keyword to search: ");
+//        String keyword = scanner.next();
+//        List<MenuItem> results = menuService.searchItems(keyword);
+//        if(results.isEmpty()){
+//            System.out.println("No items found.");
+//        }
+//        else{
+//            results.forEach(result -> System.out.printf("Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n--------------------\n",
+//                result.getName(), result.getPrice(), result.getType(),
+//                createNewItem().isAvailable() ? "Available":"Unavailable"));
 //        }
 //    }
-
-    private void searchMenuItems(){
-        System.out.println("Enter keyword to search: ");
-        String keyword = scanner.next();
-        List<MenuItem> results = menuService.searchItems(keyword);
-        if(results.isEmpty()){
-            System.out.println("No items found.");
-        }
-        else{
-            results.forEach(result -> System.out.printf("Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n--------------------\n",
-                result.getName(), result.getPrice(), result.getType(),
-                createNewItem().isAvailable() ? "Available":"Unavailable"));
-        }
-    }
-
-//    private void placeOrder() {
-//        System.out.println("Placing order...");
-//    }
-//
-//    private void viewOrderHistory(){
-//        System.out.println("Order History: ");
-//    }
-
 
     public void regularToVip(){
 
     }
-//    private void accessVIPBenefits() {
-//        System.out.println("Accessing VIP Benefits...");
-//    }
-
-//    public void showOrderTracking(){
-//        System.out.println("this is order tracking menu");
-//    }
-
-//    public void handleNavigation() {
-//        System.out.println("Navigating back to the main menu...");
-////        showMainMenu(); //main menu
-//    }
 
     private void generateSalesReport(){
         System.out.println("Generating sales report...");

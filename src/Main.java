@@ -5,7 +5,7 @@ public class Main {
     private static AuthenticationManager authenticator = new AuthenticationManager();
     private static Scanner scanner = new Scanner(System.in);
     private static final MenuService menuService = new MenuServiceImpl();
-    private static TerminalInterface terminalInterface = new TerminalInterface(menuService);
+    private static TerminalInterface terminalInterface = new TerminalInterface(menuService,authenticator);
 
     public static void main(String[] args) {
         while (true) {
@@ -49,11 +49,11 @@ public class Main {
             }
             else if(user instanceof VIPCustomer){
                 System.out.println("\nLogin Successful");
-                terminalInterface.showVIPCustomerMenu();
+                terminalInterface.showVIPCustomerMenu((VIPCustomer) user);
             }
             else if(user instanceof RegularCustomer){
                 System.out.println("\nLogin Successful");
-                terminalInterface.showRegularCustomerMenu();
+                terminalInterface.showRegularCustomerMenu((RegularCustomer) user);
             }
         } catch(InvalidLoginException e){
             System.out.println(e.getMessage());
