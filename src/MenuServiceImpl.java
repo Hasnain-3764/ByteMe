@@ -1,12 +1,12 @@
 import java.util.*;
 
-public class MenuManager implements MenuService{
+public class MenuServiceImpl implements MenuService{
 //    private Map<String, MenuItem> menuItemsByName;
 //    private Map<String, List<MenuItem>> menuItemsByType;
 //    private Map<Boolean, List<MenuItem>> menuItemsByAvailability;
 
     private List<MenuItem> menuItems;
-    public MenuManager() {
+    public MenuServiceImpl() {
 //        menuItemsByType = new HashMap<>();
 //        menuItemsByName = new HashMap<>();
 //        menuItemsByAvailability = new HashMap<>();
@@ -22,13 +22,14 @@ public class MenuManager implements MenuService{
     }
 
     @Override
-    public void updateMenuItem(MenuItem item) {
+    public boolean updateMenuItem(MenuItem updatedItem) {
         for (int i = 0; i < menuItems.size(); i++) {
-            if (menuItems.get(i).getName().equals(item.getName())) {
-                menuItems.set(i, item); // Update the item in-place
-                break;
+            if (menuItems.get(i).getName().equals(updatedItem.getName())) {
+                menuItems.set(i, updatedItem); // Update the item in-place
+                return true; // Update successful
             }
         }
+        return false; // Item not found
     }
 
     @Override
@@ -82,15 +83,14 @@ public class MenuManager implements MenuService{
     }
 
     @Override
-    public List<MenuItem> getItemsByAvailability(boolean available){
-        List<MenuItem> sortedItems = new ArrayList<>(menuItems);
-        Collections.sort(sortedItems, new Comparator<MenuItem>() {
-            @Override
-            public int compare(MenuItem menuItem1, MenuItem menuItem2) {
-                return Boolean.compare(menuItem2.isAvailable(), menuItem1.isAvailable());
+    public List<MenuItem> filterItemsByAvailability(boolean available){
+        List<MenuItem> results = new ArrayList<>();
+        for (MenuItem item : menuItems) {
+            if (item.isAvailable() == available) {
+                results.add(item);
             }
-        });
-        return sortedItems;
+        }
+        return results;
     }
 
 }
