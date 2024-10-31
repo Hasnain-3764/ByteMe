@@ -23,7 +23,20 @@ public class Main {
         }
     }
     private static void handleLogin(){
-        System.out.println("Enter ID (Roll no for students, AdminID for admins): ");
+
+        System.out.println("Login as: ");
+        System.out.println("1. Admin login");
+        System.out.println("2. VIP login");
+        System.out.println("3. Regular login");
+        System.out.println("4. <-- Go Back");
+
+        int choice = InputUtils.readInt("Enter your choice: ", 1, 4);
+        switch(choice){
+            case 1 -> adminLogin(); // for printing only. the logic is same for all users
+            case 2 -> vipLogin();
+            case 3 -> regularLogin();
+        }
+
         String id = scanner.next();
         System.out.println("Enter password: ");
         String password = scanner.next();
@@ -31,25 +44,51 @@ public class Main {
         try{
             User user = authenticator.login(id,password);
             if(user instanceof Admin){
-                terminalInterface.showAdminMenu();
+                System.out.println("\nLogin Successful");
+                terminalInterface.showAdminMenu((Admin) user);
             }
             else if(user instanceof VIPCustomer){
+                System.out.println("\nLogin Successful");
                 terminalInterface.showVIPCustomerMenu();
             }
             else if(user instanceof RegularCustomer){
+                System.out.println("\nLogin Successful");
                 terminalInterface.showRegularCustomerMenu();
             }
         } catch(InvalidLoginException e){
             System.out.println(e.getMessage());
         }
     }
+    private static void regularLogin(){
+        System.out.println("Hello Users");
+        System.out.println("To confirm it's you, please: ");
+        System.out.println("Enter your Roll No");
+    }
+
+    private static void vipLogin(){
+        System.out.println("Hello VIP Users");
+        System.out.println("To confirm it's you, please: ");
+        System.out.println("Enter your Roll No");
+    }
+
+    private static void adminLogin(){
+        System.out.println("Hello Admins");
+        System.out.println("To confirm its you, please: ");
+        System.out.println("Enter your unique Admin ID");
+    }
+
     private static void handleSignup(){
         System.out.println("Sign up as: ");
-        System.out.println("1. Admin");
-        System.out.println("2. VIP Customer");
-        System.out.println("3. Regular Customer");
+        System.out.println("1. Admin SignUp");
+        System.out.println("2. VIP SignUp");
+        System.out.println("3. Regular SignUp");
+        System.out.println("4. <-- Go Back");
 
-        int choice = InputUtils.readInt("Enter your choice: ", 1, 3);
+        int choice = InputUtils.readInt("Enter your choice: ", 1, 4);
+        if (choice == 4) {
+            System.out.println("Returning to main menu...");
+            return; // exit
+        }
         System.out.println("Enter name: ");
         String name = scanner.next();
         System.out.println("Enter unique ID (Roll no for students, Admin ID for Admins): ");

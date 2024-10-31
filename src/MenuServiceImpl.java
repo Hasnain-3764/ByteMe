@@ -1,4 +1,6 @@
+import javax.xml.crypto.Data;
 import java.util.*;
+
 
 public class MenuServiceImpl implements MenuService{
 //    private Map<String, MenuItem> menuItemsByName;
@@ -12,7 +14,11 @@ public class MenuServiceImpl implements MenuService{
 //        menuItemsByAvailability = new HashMap<>();
 //        menuItemsByAvailability.put(true, new ArrayList<>());
 //        menuItemsByAvailability.put(false, new ArrayList<>());
-        this.menuItems = new ArrayList<>();
+
+        List<MenuItem> initialMenuItems = DataInitializer.initilizeMenuItems();
+        this.menuItems = new ArrayList<>(); // allocating data is a must step.
+        menuItems.addAll(initialMenuItems);
+//        this.menuItems = new ArrayList<>(); // if you dont want initialised data
     }
 
 
@@ -38,7 +44,7 @@ public class MenuServiceImpl implements MenuService{
     }
 
     @Override
-    public List<MenuItem> getAllItems() {
+    public List<MenuItem> getAllItems(){
         return new ArrayList<>(menuItems);  // Return a copy of the list
     }
 
