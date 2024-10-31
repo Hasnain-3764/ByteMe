@@ -9,7 +9,6 @@ public class AuthenticationManager {
 
     public AuthenticationManager(){
         userMap = new HashMap<>();
-//        for(User user: )
         List<User> initialUsers = DataInitializer.initilizeUsers();
         for(User user: initialUsers){
             userMap.put(user.getLoginID(), user);
