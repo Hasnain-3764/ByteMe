@@ -2,12 +2,16 @@ import java.util.*;
 
 public class OrderManagerImpl implements OrderManager {
     private static OrderManagerImpl instance;
-    private List<Order> pendingOrders;
+
+    private final PriorityQueue<Order> pendingOrders;
     private Map<String, List<Order>> orderHistories;
 
     private OrderManagerImpl() {
-//        pendingOrders = new PriorityQueue<>(new OrderComparator()); // to be implemented
-//        orderHistories = new HashMap<>();
+        Comparator<Order> orderComparator = Comparator
+                .comparing(Order::getPriority)
+                .thenComparing(Order::getOrderTime);
+        pendingOrders = new PriorityQueue<>(orderComparator);
+        orderHistories = new HashMap<>();
     }
 
     public static OrderManagerImpl getInstance(){
@@ -26,4 +30,13 @@ public class OrderManagerImpl implements OrderManager {
     public List<Order> getOrderHistory(String customerID) {
         return orderHistories.getOrDefault(customerID, new ArrayList<>());
     }
+
+    @Override
+    public void trackOrders() {
+        System.out.println("Pending Orders:");
+        for (Order order : pendingOrders) {
+            System.out.println(order);
+        }
+    }
+
 }

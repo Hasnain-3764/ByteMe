@@ -1,0 +1,11 @@
+IssueStack
+
+1) i want to use customer service class so that vip and regular customer dont' directly access menu services
+
+2) i want a universal authenticator but it is clashing with my idea of customer service class
+
+3) orderitem to be implemented
+4) if we pass customerService as an argument in constructor, then in data initiliser class we have to pass this too many times, and how will we even pass it?
+and everytime i create a user during runtime, how would this work then?
+5) how to correctly use menuService and customerService
+6) whether menuservice should also be a global(like only one instance for all functions)

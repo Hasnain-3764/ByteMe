@@ -5,30 +5,12 @@ import java.util.Scanner;
 
 public class TerminalInterface {
     private final Scanner scanner;
-    private final MenuService menuService;
-    private final AuthenticationManager authenticator;  // New field for AuthenticationManager
+    private final CustomerService customerService;
 
-    public TerminalInterface(MenuService menuService, AuthenticationManager authenticator){
-        this.menuService = menuService;
-        this.authenticator = authenticator;
+    public TerminalInterface(){
+        this.customerService = customerService;
         this.scanner = new Scanner(System.in);
     }
-//    public void showMainMenu(){
-//        System.out.println("this is main menu");
-//        System.out.println("1. Admin Login");
-//        System.out.println("2. VIP Login");
-//        System.out.println("3. Regular Login");
-//        System.out.println("4. Exit");
-//
-//        int choice = InputUtils.readInt("Enter your choice: ", 1, 4);
-//        switch(choice){
-//            case 1 -> showAdminMenu((Admin) user);
-//            case 2 -> showVIPCustomerMenu();
-//            case 3 -> showRegularCustomerMenu();
-//            case 4 -> System.out.println("Exiting... Thank You");
-//            default -> System.out.println("Invalid choice. Try again.");
-//        }
-//    }
 
     // Admin functions
     public void showAdminMenu(Admin admin){
@@ -74,14 +56,24 @@ public class TerminalInterface {
             int choice = InputUtils.readInt("Enter your choice: ", 1, 6);
 
             switch(choice){
-                case 1 ->  vipCustomer.browseMenu(); // to be implemented
+                case 1 ->  customerService.browseMenu(); // to be implemented
                 case 2 -> {
                     System.out.print("Enter keyword to search: ");
                     String keyword = scanner.next();
-                    vipCustomer.searchMenuItems(keyword); // to be implemented
+                    customerService.searchMenuItems(keyword); // to be implemented
                 }
-                case 3 -> vipCustomer.placeOrder(new Order());
-                case 4 -> vipCustomer.viewOrderHistory();
+                case 3 -> {
+                    Order order = createOrder(vipCustomer); // create an Order object
+                    try {
+                        customerService.placeOrder(vipCustomer, order);
+                    } catch (DishNotAvailableException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                case 4 -> {
+                    List<Order> history = customerService.getOrderHistory(vipCustomer.getLoginID());
+                    displayOrderHistory(history);
+                }
                 case 5 -> vipCustomer.accessVIPBenefits();
                 case 6 -> {
                     System.out.println("Logging out...");
@@ -123,7 +115,13 @@ public class TerminalInterface {
             }
         }
     }
+
     // helper methods
+    private Order createOrder(Customer customer) {
+        // implement order creation logic, e.g., selecting items and quantities
+        // For brevity, assume we return a new Order object
+        return new Order(customer.getLoginID());
+    }
 
     private void becomeVIP(RegularCustomer regularCustomer){
         System.out.println("To become a VIP, there is one-time upgrade fee.");
