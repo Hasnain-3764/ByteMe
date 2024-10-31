@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MenuManager implements MenuService{
 //    private Map<String, MenuItem> menuItemsByName;
@@ -69,12 +66,31 @@ public class MenuManager implements MenuService{
 
     @Override
     public List<MenuItem> sortItemsByPrice(boolean ascending) {
-        return List.of();
+        List<MenuItem> sortedItems = new ArrayList<>(menuItems);
+        Collections.sort(sortedItems, new Comparator<MenuItem>(){
+            @Override
+            public int compare(MenuItem item1, MenuItem item2){
+                if(ascending){
+                    return Double.compare(item1.getPrice(), item2.getPrice());
+                }
+                else{
+                    return Double.compare(item2.getPrice(), item1.getPrice());
+                }
+            }
+        });
+        return sortedItems;
     }
 
     @Override
     public List<MenuItem> getItemsByAvailability(boolean available){
-        return List.of();
+        List<MenuItem> sortedItems = new ArrayList<>(menuItems);
+        Collections.sort(sortedItems, new Comparator<MenuItem>() {
+            @Override
+            public int compare(MenuItem menuItem1, MenuItem menuItem2) {
+                return Boolean.compare(menuItem2.isAvailable(), menuItem1.isAvailable());
+            }
+        });
+        return sortedItems;
     }
 
 }
