@@ -71,7 +71,7 @@ public class TerminalInterface {
 
             System.out.println("6. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 5);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 6);
 
             switch(choice){
                 case 1 ->  vipCustomer.browseMenu(); // to be implemented
@@ -108,7 +108,7 @@ public class TerminalInterface {
                 case 1 -> regularCustomer.browseMenu(); // to be implemented
                 case 2 -> {
                     System.out.print("Enter keyword to search: ");
-                    String keyword = scanner.next();
+                    String keyword = scanner.nextLine();
                     regularCustomer.searchMenuItems(keyword); // to be implemented
                 }
                 case 3 -> regularCustomer.placeOrder(new Order());

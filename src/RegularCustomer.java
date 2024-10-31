@@ -1,19 +1,20 @@
 import java.util.List;
 
 public class RegularCustomer extends Customer {
-    private MenuService menuService;
-    private OrderManager orderManager;
+//    private MenuService menuService;
+//    private OrderManager orderManager;
 
     public RegularCustomer(String name, String password, String rollNo) {
         super(name, password, rollNo);
     }
-    public RegularCustomer(String name, String password, String rollNo, MenuService menuService, OrderManager orderManager) {
-        super(name, password, rollNo);
-        this.menuService = menuService;
-        this.orderManager = orderManager;
-    }
+//    public RegularCustomer(String name, String password, String rollNo, MenuService menuService, OrderManager orderManager) {
+//        super(name, password, rollNo);
+//        this.menuService = menuService;
+//        this.orderManager = orderManager;
+//    }
 
     public void browseMenu(){
+        MenuService menuService = MenuServiceImpl.getInstance();
         System.out.println("Canteen Menu");
         List<MenuItem> items = menuService.getAllItems();
         if(items.isEmpty()) {
@@ -29,6 +30,7 @@ public class RegularCustomer extends Customer {
         }
     }
     public void searchMenuItems(String keyword){
+        MenuService menuService = MenuServiceImpl.getInstance();
         System.out.println("Searching for "+keyword);
         List<MenuItem> results = menuService.searchItems(keyword);
         if(results.isEmpty()){
@@ -43,6 +45,7 @@ public class RegularCustomer extends Customer {
 
     @Override
     public void placeOrder(Order order) {
+        OrderManager orderManager = OrderManagerImpl.getInstance();
         // Implement order placement logic
         System.out.println("Regular customer order here");
     }
@@ -52,6 +55,7 @@ public class RegularCustomer extends Customer {
     }
 
     public void viewOrderHistory() {
+        OrderManager orderManager = OrderManagerImpl.getInstance();
         System.out.println("Viewing order history:");
     }
 

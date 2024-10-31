@@ -6,20 +6,30 @@ import java.util.HashMap;
 public class AuthenticationManager {
     private Map<String, User> userMap;
     private static Scanner scanner = new Scanner(System.in);
-
-    public AuthenticationManager(){
+    private static AuthenticationManager instance;
+    // private constructor to avoid instantiation.
+    private AuthenticationManager(){
         userMap = new HashMap<>();
         List<User> initialUsers = DataInitializer.initilizeUsers();
         for(User user: initialUsers){
             userMap.put(user.getLoginID(), user);
         }
     }
+
+    // to access the only instance(common across all classes)
+    public static AuthenticationManager getInstance() {
+        if (instance == null) {
+            instance = new AuthenticationManager();
+        }
+        return instance;
+    }
+
     public User login(String id, String password) throws InvalidLoginException {
         User user = userMap.get(id);
-        if (user != null && user.login(id, password)) {
+        if (user != null && user.login(password)) {
             return user;  // Login successful
         }
-        throw new InvalidLoginException("Invalid email or password.");
+        throw new InvalidLoginException("Invalid ID or password.");
     }
 
     // Signup method

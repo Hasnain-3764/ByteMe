@@ -1,20 +1,21 @@
 import java.util.List;
 
 public class VIPCustomer extends Customer{
-    private MenuService menuService;
-    private OrderManager orderManager;
+//    private MenuService menuService;
+//    private OrderManager orderManager;
 
     public VIPCustomer(String name, String password, String rollNo){
         super(name, password, rollNo);
     }
 
-    public VIPCustomer(String name, String password, String rollNo, MenuService menuService, OrderManager orderManager) {
-        super(name, password, rollNo);
-        this.menuService = menuService;
-        this.orderManager = orderManager;
-    }
+//    public VIPCustomer(String name, String password, String rollNo, MenuService menuService, OrderManager orderManager) {
+//        super(name, password, rollNo);
+//        this.menuService = menuService;
+//        this.orderManager = orderManager;
+//    }
 
     public void browseMenu(){
+        MenuService menuService = MenuServiceImpl.getInstance();
         System.out.println("Canteen Menu");
         List<MenuItem> items = menuService.getAllItems();
         if(items.isEmpty()) {
@@ -31,6 +32,7 @@ public class VIPCustomer extends Customer{
     }
 
     public void searchMenuItems(String keyword){
+        MenuService menuService = MenuServiceImpl.getInstance();
         System.out.println("Searching for "+keyword);
         List<MenuItem> results = menuService.searchItems(keyword);
         if(results.isEmpty()){
@@ -45,16 +47,18 @@ public class VIPCustomer extends Customer{
 
     @Override
     public void placeOrder(Order order) {
+        OrderManager orderManager = OrderManagerImpl.getInstance();
         System.out.println("fast fast ordering for vips.");
     }
 
 
     public void viewOrderHistory() {
+        OrderManager orderManager = OrderManagerImpl.getInstance();
         System.out.println("Viewing order history:");
     }
 
     public void accessVIPBenefits(){
-
+        System.out.println("Accessing VIP benefits...");
     }
 
 }

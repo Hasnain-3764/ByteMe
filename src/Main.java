@@ -2,7 +2,7 @@
 import java.util.Scanner;
 
 public class Main {
-    private static AuthenticationManager authenticator = new AuthenticationManager();
+    private static AuthenticationManager authenticator = AuthenticationManager.getInstance();
     private static Scanner scanner = new Scanner(System.in);
     private static final MenuService menuService = new MenuServiceImpl();
     private static TerminalInterface terminalInterface = new TerminalInterface(menuService,authenticator);
@@ -31,10 +31,16 @@ public class Main {
         System.out.println("4. <-- Go Back");
 
         int choice = InputUtils.readInt("Enter your choice: ", 1, 4);
+        if (choice == 4) {
+            System.out.println("Returning to main menu...");
+            return;
+        }
+
         switch(choice){
             case 1 -> adminLogin(); // for printing only. the logic is same for all users
             case 2 -> vipLogin();
             case 3 -> regularLogin();
+            default -> System.out.println("Invalid choice, please try again.");
         }
 
         String id = scanner.next();

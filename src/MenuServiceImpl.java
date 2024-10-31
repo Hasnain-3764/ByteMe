@@ -3,24 +3,24 @@ import java.util.*;
 
 
 public class MenuServiceImpl implements MenuService{
-//    private Map<String, MenuItem> menuItemsByName;
-//    private Map<String, List<MenuItem>> menuItemsByType;
-//    private Map<Boolean, List<MenuItem>> menuItemsByAvailability;
-
     private List<MenuItem> menuItems;
-    public MenuServiceImpl() {
-//        menuItemsByType = new HashMap<>();
-//        menuItemsByName = new HashMap<>();
-//        menuItemsByAvailability = new HashMap<>();
-//        menuItemsByAvailability.put(true, new ArrayList<>());
-//        menuItemsByAvailability.put(false, new ArrayList<>());
+    private static MenuServiceImpl instance;
 
+    // private constructor as to stop external instantiation.
+    private MenuServiceImpl() {
         List<MenuItem> initialMenuItems = DataInitializer.initilizeMenuItems();
         this.menuItems = new ArrayList<>(); // allocating data is a must step.
         menuItems.addAll(initialMenuItems);
 //        this.menuItems = new ArrayList<>(); // if you dont want initialised data
     }
 
+    // this is method to access universal instance of menu manager.
+    public static MenuServiceImpl getInstance() {
+        if (instance == null) {
+            instance = new MenuServiceImpl();
+        }
+        return instance;
+    }
 
     @Override
     public void addMenuItem(MenuItem item) {

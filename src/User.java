@@ -9,8 +9,8 @@ public abstract class User {
 
     public abstract String getLoginID();  // Each subclass will define its login ID
 
-    public boolean login(String id, String password) {
-        return this.getLoginID().equals(id) && this.password.equals(password);
+    public boolean login(String password) {
+        return this.password.equals(password);
     }
 
     public String getName() {
