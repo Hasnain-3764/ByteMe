@@ -58,6 +58,69 @@ public class TerminalInterface {
         }
     }
 
+    public void showVIPCustomerMenu(VIPCustomer vipCustomer){
+        while(true){
+            System.out.println("\nVIP Customer Menu:");
+            System.out.println("1. Browse Menu");
+            System.out.println("2. Search Menu Items");
+            System.out.println("3. Place an Order");
+            System.out.println("4. View Order History");
+            System.out.println("5. Access VIP Benefits");
+
+            System.out.println("6. Logout");
+
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 5);
+
+            switch(choice){
+                case 1 ->  vipCustomer.browseMenu(); // to be implemented
+                case 2 -> {
+                    System.out.print("Enter keyword to search: ");
+                    String keyword = scanner.next();
+                    vipCustomer.searchMenuItems(keyword); // to be implemented
+                }
+                case 3 -> vipCustomer.placeOrder(new Order());
+                case 4 -> vipCustomer.viewOrderHistory();
+                case 5 -> vipCustomer.accessVIPBenefits();
+                case 6 -> {
+                    System.out.println("Logging out...");
+                    return;
+                }
+                default -> System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    public void showRegularCustomerMenu(RegularCustomer regularCustomer) {
+        while (true) {
+            System.out.println("\nRegular Customer Menu:");
+            System.out.println("1. Browse Menu");
+            System.out.println("2. Search Menu Items");
+            System.out.println("3. Place an Order");
+            System.out.println("4. View Order History");
+            System.out.println("5. Become a VIP");
+            System.out.println("6. Logout");
+
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 5);
+
+            switch (choice) {
+                case 1 -> regularCustomer.browseMenu(); // to be implemented
+                case 2 -> {
+                    System.out.print("Enter keyword to search: ");
+                    String keyword = scanner.next();
+                    regularCustomer.searchMenuItems(keyword); // to be implemented
+                }
+                case 3 -> regularCustomer.placeOrder(new Order());
+                case 4 -> regularCustomer.viewOrderHistory();
+                case 5 -> accessVIPBenefits(); // special privelge for our vips
+                case 5 -> regularCustomer.accessRegularBenefits();
+                case 7 -> {
+                    System.out.println("Logging out...");
+                    return; //exit to main menu
+                }
+                default -> System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
     // helper methods
     private MenuItem createNewItem(){
         System.out.println("Enter item name: ");
@@ -102,42 +165,18 @@ public class TerminalInterface {
     }
 
 
-    public void showVIPCustomerMenu(){
-        while(true){
-            System.out.println("\nRegular Customer Menu:");
-            System.out.println("1. Browse Menu");
-            System.out.println("2. Search Menu Items");
-            System.out.println("3. Place an Order");
-            System.out.println("4. View Order History");
-            System.out.println("5. Logout");
-
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 5);
-
-            switch(choice){
-                case 1 -> browseMenu();
-                case 2 -> searchMenuItems();
-                case 3 -> placeOrder();
-                case 4 -> viewOrderHistory();
-                case 5 -> {
-                    System.out.println("Logging out...");
-                    return;
-                }
-                default -> System.out.println("Invalid choice. Try again.");
-            }
-        }
-    }
-
-    private void browseMenu() {
-        List<MenuItem> items = menuService.getAllItems();
-        if (items.isEmpty()) {
-            System.out.println("No items available in the menu.");
-        } else {
-            System.out.println("Menu Items:");
-            items.forEach(item -> System.out.printf("Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n--------------------\n",
-                    item.getName(), item.getPrice(), item.getType(),
-                    item.isAvailable() ? "Available" : "Unavailable"));
-        }
-    }
+//
+//    private void browseMenu() {
+//        List<MenuItem> items = menuService.getAllItems();
+//        if (items.isEmpty()) {
+//            System.out.println("No items available in the menu.");
+//        } else {
+//            System.out.println("Menu Items:");
+//            items.forEach(item -> System.out.printf("Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n--------------------\n",
+//                    item.getName(), item.getPrice(), item.getType(),
+//                    item.isAvailable() ? "Available" : "Unavailable"));
+//        }
+//    }
 
     private void searchMenuItems(){
         System.out.println("Enter keyword to search: ");
@@ -147,56 +186,36 @@ public class TerminalInterface {
             System.out.println("No items found.");
         }
         else{
-            results.forEach(System.out::println);
+            results.forEach(result -> System.out.printf("Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n--------------------\n",
+                result.getName(), result.getPrice(), result.getType(),
+                createNewItem().isAvailable() ? "Available":"Unavailable"));
         }
     }
 
-    private void placeOrder() {
-        System.out.println("Placing order...");
+//    private void placeOrder() {
+//        System.out.println("Placing order...");
+//    }
+//
+//    private void viewOrderHistory(){
+//        System.out.println("Order History: ");
+//    }
+
+
+    public void regularToVip(){
+
     }
+//    private void accessVIPBenefits() {
+//        System.out.println("Accessing VIP Benefits...");
+//    }
 
-    private void viewOrderHistory(){
-        System.out.println("Order History: ");
-    }
+//    public void showOrderTracking(){
+//        System.out.println("this is order tracking menu");
+//    }
 
-    public void showRegularCustomerMenu() {
-        while (true) {
-            System.out.println("\nRegular Customer Menu:");
-            System.out.println("1. Browse Menu");
-            System.out.println("2. Search Menu Items");
-            System.out.println("3. Place an Order");
-            System.out.println("4. View Order History");
-            System.out.println("5. Logout");
-
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 5);
-
-            switch (choice) {
-                case 1 -> browseMenu();
-                case 2 -> searchMenuItems();
-                case 3 -> placeOrder();
-                case 4 -> viewOrderHistory();
-                case 5 -> accessVIPBenefits(); // special privelge for our vips
-                case 6 -> {
-                    System.out.println("Logging out...");
-                    return; //exit to main menu
-                }
-                default -> System.out.println("Invalid choice. Try again.");
-            }
-        }
-    }
-
-    private void accessVIPBenefits() {
-        System.out.println("Accessing VIP Benefits...");
-    }
-
-    public void showOrderTracking(){
-        System.out.println("this is order tracking menu");
-    }
-
-    public void handleNavigation() {
-        System.out.println("Navigating back to the main menu...");
-//        showMainMenu(); //main menu
-    }
+//    public void handleNavigation() {
+//        System.out.println("Navigating back to the main menu...");
+////        showMainMenu(); //main menu
+//    }
 
     private void generateSalesReport(){
         System.out.println("Generating sales report...");
