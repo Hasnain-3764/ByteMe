@@ -4,8 +4,8 @@ import java.util.Scanner;
 public class Main {
     private static AuthenticationManager authenticator = AuthenticationManager.getInstance();
     private static Scanner scanner = new Scanner(System.in);
-    private static final MenuService menuService = new MenuServiceImpl();
-    private static TerminalInterface terminalInterface = new TerminalInterface(menuService,authenticator);
+    private static final MenuService menuService = MenuServiceImpl.getInstance();
+    private static TerminalInterface terminalInterface = new TerminalInterface();
 
     public static void main(String[] args) {
         while (true) {

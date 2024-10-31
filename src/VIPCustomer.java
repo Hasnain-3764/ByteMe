@@ -4,9 +4,9 @@ public class VIPCustomer extends Customer{
 
     private final CustomerService customerService;
 
-    public VIPCustomer(String name, String password, String rollNo, CustomerService customerService){
+    public VIPCustomer(String name, String password, String rollNo) {
         super(name, password, rollNo);
-        this.customerService = customerService;
+        this.customerService = CustomerService.getInstance();
     }
 
     public void browseMenu(){

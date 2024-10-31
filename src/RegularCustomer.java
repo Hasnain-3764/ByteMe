@@ -3,9 +3,9 @@ import java.util.List;
 public class RegularCustomer extends Customer {
     private final CustomerService customerService;
 
-    public RegularCustomer(String name, String password, String rollNo, CustomerService customerService) {
+    public RegularCustomer(String name, String password, String rollNo) {
         super(name, password, rollNo);
-        this.customerService = customerService;
+        this.customerService = CustomerService.getInstance();
     }
 
     public void browseMenu(){

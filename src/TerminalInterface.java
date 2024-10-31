@@ -6,9 +6,13 @@ import java.util.Scanner;
 public class TerminalInterface {
     private final Scanner scanner;
     private final CustomerService customerService;
+    private final MenuService menuService;
+    private final AuthenticationManager authenticator;
 
     public TerminalInterface(){
-        this.customerService = customerService;
+        this.customerService = CustomerService.getInstance();
+        this.menuService = MenuServiceImpl.getInstance();
+        this.authenticator = AuthenticationManager.getInstance();
         this.scanner = new Scanner(System.in);
     }
 

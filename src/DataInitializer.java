@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataInitializer {
-    public static List<User> initilizeUsers(){
+    public static List<User> initializeUsers(){
         List<User> users = new ArrayList<>();
         users.add(new Admin("Admin1","pswd1","A1"));
         users.add(new VIPCustomer("vipUser1", "vipPswd1","2023325"));

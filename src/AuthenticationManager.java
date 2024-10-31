@@ -10,7 +10,7 @@ public class AuthenticationManager {
     // private constructor to avoid instantiation.
     private AuthenticationManager(){
         userMap = new HashMap<>();
-        List<User> initialUsers = DataInitializer.initilizeUsers();
+        List<User> initialUsers = DataInitializer.initializeUsers();
         for(User user: initialUsers){
             userMap.put(user.getLoginID(), user);
         }

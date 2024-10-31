@@ -2,12 +2,20 @@ import java.util.List;
 
 public class CustomerService {
 
+    private static CustomerService instance;
     private final MenuService menuService;
     private final OrderManager orderManager;
 
     public CustomerService(MenuService menuService, OrderManager orderManager) {
-        this.menuService = menuService;
-        this.orderManager = orderManager;
+        this.menuService = MenuServiceImpl.getInstance();
+        this.orderManager = OrderManagerImpl.getInstance();
+    }
+
+    public static CustomerService getInstance() {
+        if (instance == null) {
+            instance = new CustomerService();
+        }
+        return instance;
     }
 
     public void browseMenu(){

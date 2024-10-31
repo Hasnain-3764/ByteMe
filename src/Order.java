@@ -10,10 +10,31 @@ public class Order implements Comparable<Order> {
     private Priority priority;
     private final LocalDateTime orderTime;
     private final List<OrderItem> items;
-    // other order details...
+
+    public Order(String customerID, Priority priority, List<OrderItem> items) {
+        this.customerID = customerID;
+        this.priority = priority;
+        this.orderTime = LocalDateTime.now();
+        this.items = items;
+    }
+    // getters and setters
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public LocalDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
 
     @Override
     public int compareTo(Order other) {
-        return this.priority.compareTo(other.priority);
-    }
+        int priorityComparison = other.priority.compareTo(this.priority);
+        if (priorityComparison != 0) {
+            return priorityComparison;
+        }
+        return this.orderTime.compareTo(other.orderTime);    }
 }
