@@ -1,22 +1,15 @@
 public class Admin extends User{
     private String adminId;
-    private MenuService menuService;
-    private OrderManager orderManager;
-    private ReportGenerator reportGenerator;
+    private final CustomerService customerService;
+    private final MenuService menuService;
 
     public Admin(String name, String password, String adminId){
         super(name,password);
         this.adminId = adminId;
+        this.customerService = CustomerService.getInstance();
+        this.menuService = MenuServiceImpl.getInstance();
     }
 
-    public Admin(String name, String password, String adminId, MenuService menuService,
-                 ReportGenerator reportGenerator, OrderManager orderManager){
-        super(name,password);
-        this.adminId = adminId;
-        this.menuService = menuService;
-        this.reportGenerator = reportGenerator;
-        this.orderManager = orderManager;
-    }
 
     @Override
     public String getLoginID() {
@@ -25,8 +18,13 @@ public class Admin extends User{
 
     // new admin specific methods
     public void addMenuItem(MenuItem item){
-        menuService.addMenuItem(item);
-        System.out.println("Item added successfully.");
+        boolean isAdded = menuService.addMenuItem(item);
+        if(isAdded){
+            System.out.println("Item '" + item.getName() + "' has been successfully added to the menu.");
+        }
+        else{
+            System.out.println("Failed to add item '" + item.getName() + "'. It may already exist.");
+        }
     }
 
     public boolean updateMenuItem(MenuItem item)//// changed updateaMenuItem to boolean type

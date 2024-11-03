@@ -63,6 +63,7 @@ public class Main {
             }
         } catch(InvalidLoginException e){
             System.out.println(e.getMessage());
+            handleLogin(); // recursively calling
         }
     }
     private static void regularLogin(){
@@ -78,6 +79,12 @@ public class Main {
     }
 
     private static void adminLogin(){
+        System.out.println("Hello Admins");
+        System.out.println("To confirm its you, please: ");
+        System.out.println("Enter your unique Admin ID");
+    }
+
+    private static void adminSignUp(){
         System.out.println("Hello Admins");
         System.out.println("To confirm its you, please: ");
         System.out.println("Enter your unique Admin ID");

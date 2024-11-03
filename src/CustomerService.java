@@ -6,7 +6,7 @@ public class CustomerService {
     private final MenuService menuService;
     private final OrderManager orderManager;
 
-    public CustomerService(MenuService menuService, OrderManager orderManager) {
+    public CustomerService() {
         this.menuService = MenuServiceImpl.getInstance();
         this.orderManager = OrderManagerImpl.getInstance();
     }
@@ -17,7 +17,6 @@ public class CustomerService {
         }
         return instance;
     }
-
     public void browseMenu(){
         System.out.println("Canteen Menu");
         List<MenuItem> items = menuService.getAllItems();
@@ -27,7 +26,7 @@ public class CustomerService {
         else{
             System.out.println("Menu Items.");
             items.forEach(item->System.out.printf(
-                    "Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n--------------------\\n",
+                    "Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n \n--------------------\n \n",
                     item.getName(), item.getPrice(), item.getType(),
                     item.isAvailable() ? "Available":"Unavailable"
             ));

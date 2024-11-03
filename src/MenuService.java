@@ -1,7 +1,7 @@
 import java.util.List;
 
 public interface MenuService {
-    void addMenuItem(MenuItem item);
+    boolean addMenuItem(MenuItem item);
     boolean updateMenuItem(MenuItem item);
     void removeMenuItem(String itemName);
     List<MenuItem> getAllItems();  // View all items

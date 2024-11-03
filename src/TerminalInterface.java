@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -29,9 +30,9 @@ public class TerminalInterface {
             System.out.println("7. Logout");
 
             int choice = InputUtils.readInt("Enter your choice: ", 1, 7);
-
+            List<MenuItem> items = menuService.getAllItems();
             switch(choice){
-                case 1 -> menuService.getAllItems().forEach(System.out::println);
+                case 1 -> customerService.browseMenu();
                 case 2 -> admin.addMenuItem(createNewItem()); // to be implemented
                 case 3 -> admin.updateMenuItem(chooseItemToUpdate()); // to be implemented
                 case 4 -> admin.removeMenuItem(chooseItemToRemove()); // implement..
@@ -67,17 +68,18 @@ public class TerminalInterface {
                     customerService.searchMenuItems(keyword); // to be implemented
                 }
                 case 3 -> {
-                    Order order = createOrder(vipCustomer); // create an Order object
-                    try {
-                        customerService.placeOrder(vipCustomer, order);
-                    } catch (DishNotAvailableException e) {
-                        System.out.println(e.getMessage());
-                    }
+//                    Order order = createOrder(vipCustomer); // create an Order object
+//                    try {
+//                        customerService.placeOrder(vipCustomer, order);
+//                    } catch (DishNotAvailableException e) {
+//                        System.out.println(e.getMessage());
+//                    }
                 }
-                case 4 -> {
-                    List<Order> history = customerService.getOrderHistory(vipCustomer.getLoginID());
-                    displayOrderHistory(history);
-                }
+//                case 4 -> {
+//                    List<Order> history = customerService.getOrderHistory(vipCustomer.getLoginID());
+//                    displayOrderHistory(history);
+//                }
+                case 4 -> vipCustomer.viewOrderHistory();
                 case 5 -> vipCustomer.accessVIPBenefits();
                 case 6 -> {
                     System.out.println("Logging out...");
@@ -96,9 +98,10 @@ public class TerminalInterface {
             System.out.println("3. Place an Order");
             System.out.println("4. View Order History");
             System.out.println("5. Become a VIP");
-            System.out.println("6. Logout");
+            System.out.println("6. Access Regular Benefits");
+            System.out.println("7. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 6);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 7);
 
             switch (choice) {
                 case 1 -> regularCustomer.browseMenu(); // to be implemented
@@ -107,7 +110,14 @@ public class TerminalInterface {
                     String keyword = scanner.nextLine();
                     regularCustomer.searchMenuItems(keyword); // to be implemented
                 }
-                case 3 -> regularCustomer.placeOrder(new Order());
+                case 3 -> {
+//                    Order order = createOrder(regularCustomer); // create an Order object
+//                    try {
+//                        customerService.placeOrder(regularCustomer, order);
+//                    } catch (DishNotAvailableException e) {
+//                        System.out.println(e.getMessage());
+//                    }
+                }
                 case 4 -> regularCustomer.viewOrderHistory();
                 case 5 -> becomeVIP(regularCustomer); // special priveledge for our vips
                 case 6-> regularCustomer.accessRegularBenefits();
@@ -121,14 +131,14 @@ public class TerminalInterface {
     }
 
     // helper methods
-    private Order createOrder(Customer customer) {
-        // implement order creation logic, e.g., selecting items and quantities
-        // For brevity, assume we return a new Order object
-        return new Order(customer.getLoginID());
-    }
+//    private Order createOrder(Customer customer) {
+//        // implement order creation logic, e.g., selecting items and quantities
+//        // For brevity, assume we return a new Order object
+//        return
+//    }
 
     private void becomeVIP(RegularCustomer regularCustomer){
-        System.out.println("To become a VIP, there is one-time upgrade fee.");
+        System.out.println("To become a VIP, there is one-time upgrade fee of ₹1000.");
         System.out.println("Do you wish to proceed? (yes/no)");
         String response = scanner.next().trim().toLowerCase();
 
@@ -139,8 +149,12 @@ public class TerminalInterface {
                     regularCustomer.getLoginID()
             );
             authenticator.upgradeToVIP(vipCustomer);
-            showVIPCustomerMenu(vipCustomer);
+//            showVIPCustomerMenu(vipCustomer);
             System.out.println("Congratulations! You are now a VIP customer.");
+            System.out.println("Please Log out .");
+            System.out.println("and log back in as VIP");
+
+
         }
         else{
             System.out.println("Upgrade to VIP cancelled");
@@ -179,8 +193,9 @@ public class TerminalInterface {
         scanner.nextLine();  // consume newline
         System.out.println("Enter new type: ");
         String type = scanner.nextLine();
-        System.out.println("Is the item available? (true/false): ");
-        boolean availability = scanner.nextBoolean();
+        System.out.println("Is it available? (yes/no): ");
+        String input = scanner.next().trim().toLowerCase();
+        boolean availability = input.equals("yes");
         scanner.nextLine();
         return new MenuItem(name,price,type,availability);
     }
@@ -210,6 +225,36 @@ public class TerminalInterface {
 
     private void generateSalesReport(){
         System.out.println("Generating sales report...");
+    }
+
+    private Order createOrder(Customer customer){
+        List <OrderItem> orderItems = new ArrayList<>();
+        while(true){
+            System.out.println("Enter the name of item to add to your order (type done to finish): ");
+            String itemName = scanner.nextLine().trim();
+            if(itemName == "done"){
+                break;
+            }
+            // checking if it is availabel
+            List<MenuItem> search = menuService.searchItems(itemName);
+            if(search.isEmpty()){
+                System.out.println("Item not found, Please try again.");
+                continue;
+            }
+            MenuItem menuItem = search.get(0); // for now, considering only one item with one name.
+            System.out.println("Enter the quantity");
+            int quantity = InputUtils.readInt("Quantity: ", 1, 20);
+
+            OrderItem orderItem = new OrderItem(menuItem, quantity);
+            orderItems.add(orderItem);
+            System.out.println("Item added to list");
+
+        }
+        if(orderItems == null){
+            System.out.println("No items were added to cart");
+            return null;
+        }
+        return new Order(customer.getLoginID(), "HIGH",orderItems);
     }
 
 }

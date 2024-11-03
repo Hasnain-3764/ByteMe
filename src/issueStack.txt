@@ -1,11 +1,17 @@
 IssueStack
 
-1) i want to use customer service class so that vip and regular customer dont' directly access menu services
+1) i want to use customer service class so that vip and regular customer dont' directly access menu services - resolved
 
-2) i want a universal authenticator but it is clashing with my idea of customer service class
+2) i want a universal authenticator but it is clashing with my idea of customer service class - resolved
 
-3) orderitem to be implemented
-4) if we pass customerService as an argument in constructor, then in data initiliser class we have to pass this too many times, and how will we even pass it?
+3) orderitem to be implemented - unresolved
+4) if we pass customerService as an argument in constructor, then in data initiliser class we have to pass this too many times, and how will we even pass it? - resolved
 and everytime i create a user during runtime, how would this work then?
 5) how to correctly use menuService and customerService
-6) whether menuservice should also be a global(like only one instance for all functions)
+6) whether menuservice should also be a global(like only one instance for all functions) - resolved
+
+7) to implement createOrder
+8) to implement placeOrder
+9) to implement viewOrderHistory
+
+10) I want automatic logout when user converts to VIP, instead of asking him logout manually.

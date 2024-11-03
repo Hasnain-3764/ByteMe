@@ -23,8 +23,17 @@ public class MenuServiceImpl implements MenuService{
     }
 
     @Override
-    public void addMenuItem(MenuItem item) {
+    public boolean addMenuItem(MenuItem item){
+        //checking for duplicates
+        for (MenuItem menuItem : menuItems){
+            if (menuItem.getName().equalsIgnoreCase(item.getName())){
+                System.out.println("Error: Menu item '" + item.getName() + "' already exists.");
+                return false; // Indicate failure to add due to duplication
+            }
+        }
         menuItems.add(item);
+        System.out.println("Menu item '" + item.getName() + "' added successfully.");
+        return true; // Indicate successful addition
     }
 
     @Override
