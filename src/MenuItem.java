@@ -3,12 +3,18 @@ public class MenuItem {
     private double price;
     private String type;
     private boolean availability;
+    private boolean vipExclusive;
 
-    public MenuItem(String name, double price, String type, boolean availability){
+    public MenuItem(String name, double price, String type, boolean availability, boolean vipExclusive){
         this.name = name;
         this.price = price;
         this.type = type;
         this.availability = availability;
+        this.vipExclusive = vipExclusive;
+    }
+
+    public boolean isVipExclusive() {
+        return vipExclusive;
     }
 
     public String getName() {

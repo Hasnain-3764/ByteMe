@@ -181,7 +181,13 @@ public class TerminalInterface {
         String input = scanner.next().trim().toLowerCase();
         boolean availability = input.equals("yes");
         scanner.nextLine();
-        return new MenuItem(name, price, type, availability);
+
+        System.out.println("Is this a premium item");
+        input = scanner.next().trim().toLowerCase();
+        boolean isPremium = input.equals("yes");
+        scanner.nextLine();
+
+        return new MenuItem(name, price, type, availability, isPremium);
     }
 
     private MenuItem chooseItemToUpdate(){
@@ -195,13 +201,21 @@ public class TerminalInterface {
         System.out.println("Enter new price: ");
         double price = scanner.nextDouble();
         scanner.nextLine();  // consume newline
+
         System.out.println("Enter new type: ");
         String type = scanner.nextLine();
+
         System.out.println("Is it available? (yes/no): ");
         String input = scanner.next().trim().toLowerCase();
         boolean availability = input.equals("yes");
         scanner.nextLine();
-        return new MenuItem(name,price,type,availability);
+
+        System.out.println("Is this a premium item");
+        input = scanner.next().trim().toLowerCase();
+        boolean isPremium = input.equals("yes");
+        scanner.nextLine();
+
+        return new MenuItem(name,price,type,availability, isPremium);
     }
 
     private String chooseItemToRemove() {

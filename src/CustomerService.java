@@ -31,7 +31,7 @@ public class CustomerService {
 //                    item.isAvailable() ? "Available":"Unavailable"
 //            ));
             for (MenuItem item : items) {
-                if (!item.isAvailable()) continue;
+//                if (!item.isAvailable()) continue;
                 System.out.printf(
                         "Name: %s | Price: ₹%.2f | Type: %s | Availability: %s\n",
                         item.getName(), item.getPrice(), item.getType(),
@@ -54,6 +54,7 @@ public class CustomerService {
         }
     }
 
+    // to implement show cart, cancel order, and remove dish from order
     public void placeOrder(Customer customer, Order order) throws DishNotAvailableException{
         if(order==null || order.getItems().isEmpty()){
             System.out.println("Nothing to order. Order creation was cancelled");
