@@ -20,5 +20,9 @@ public abstract class Customer extends User {
         // Implement viewing order history
     }
 
+    public void addOrderToHistory(Order order){
+        orderHistory.add(order);
+    }
+
     public abstract void placeOrder(Order order);
 }

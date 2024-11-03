@@ -51,10 +51,16 @@ public class CustomerService {
             System.out.println("Nothing to order. Order creation was cancelled");
             return;
         }
+        // check if everything in the order is available
+        for(OrderItem orderItem: order.getItems()){
+            if(!orderItem.getMenuItem().isAvailable()){
+                throw new DishNotAvailableException("Dish " + orderItem.getMenuItem().getName() + " is not available.");
+            }
+        }
         boolean isVIP = customer instanceof VIPCustomer;
         orderManager.placeOrder(order,isVIP);
         //add order to custormer history
-//        customer.addOrderToHistory(order); //to be implemented
+        customer.addOrderToHistory(order); //to be implemented
         System.out.println("Order placed successfully");
     }
 
