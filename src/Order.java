@@ -1,24 +1,46 @@
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class Order implements Comparable<Order> {
+
     public enum Priority {
         HIGH, NORMAL
+    }
+
+    public enum OrderStatus{
+        RECEIVED, PREPARING, DENIED, CANCELLED, REFUNED, READY
     }
 
     private String customerID;
     private Priority priority;
     private final LocalDateTime orderTime;
     private final List<OrderItem> items;
+    private OrderStatus status;
+    private String orderID;
+    private String specialRequest;
 
-    public Order(String customerID, Priority priority, List<OrderItem> items) {
+    public Order(String customerID, Priority priority, List<OrderItem> items, String specialRequest) {
+        this.orderID = UUID.randomUUID().toString();
         this.customerID = customerID;
         this.priority = priority;
         this.orderTime = LocalDateTime.now();
         this.items = items;
-    }
-    // getters and setters
+        this.status = OrderStatus.RECEIVED;
+        this.specialRequest = specialRequest;
 
+    }
+
+    // getters and setters
+    public String getOrderID(){
+        return orderID;
+    }
+    public OrderStatus getStatus() {
+        return status;
+    }
+    public String getSpecialRequest() {
+        return specialRequest;
+    }
     public String getCustomerID() {
         return customerID;
     }
@@ -34,6 +56,7 @@ public class Order implements Comparable<Order> {
     public List<OrderItem> getItems() {
         return items;
     }
+
     public double getTotalPrice(){
         double totalPrice = 0;
         for(OrderItem item : items){
@@ -45,6 +68,11 @@ public class Order implements Comparable<Order> {
         }
         return totalPrice;
     }
+
+    public void setStatus(OrderStatus status){
+        this.status = status;
+    }
+
     @Override
     public int compareTo(Order other) {
         int priorityComparison = other.priority.compareTo(this.priority);

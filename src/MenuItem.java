@@ -1,9 +1,13 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class MenuItem {
     private String name;
     private double price;
     private String type;
     private boolean availability;
     private boolean vipExclusive;
+    private List<Review> reviews;
 
     public MenuItem(String name, double price, String type, boolean availability, boolean vipExclusive){
         this.name = name;
@@ -50,6 +54,15 @@ public class MenuItem {
     public void setAvailability(boolean availability) {
         this.availability = availability;
     }
+
+    public void addReview(Review review){
+        reviews.add(review);
+    }
+
+    public List<Review> getReviews(){
+        return reviews;
+    }
+
     @Override
     public String toString() {
         return "MenuItem{" +
