@@ -52,9 +52,28 @@ public class OrderManagerImpl implements OrderManager {
         }
     }
 
+    // similar implementation like processRefund
     @Override
     public void updateOrderStatus(String orderID, Order.OrderStatus newStatus){
+        Order targetOrder = null; // uninitialised.
+        for(Order order:pendingOrders){
+            if(order.getOrderID().equals(orderID)){
+                targetOrder = order;
+                break;
+            }
+        }
+        if(targetOrder != null){
+            pendingOrders.remove(targetOrder);
+            targetOrder.setStatus(newStatus);
+            if(newStatus != Order.OrderStatus.DELIVERED && newStatus!= Order.OrderStatus.DENIED && newStatus != Order.OrderStatus.REFUNDED){
+                pendingOrders.offer(targetOrder);
+            }
+            System.out.println("Order status updated: \n" + targetOrder);
 
+        }
+        else{
+            System.out.println("OrderID not found in the pending orders.");
+        }
     }
 
     @Override// basically setting statuses

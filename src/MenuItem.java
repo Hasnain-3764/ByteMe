@@ -16,6 +16,7 @@ public class MenuItem {
         this.availability = availability;
         this.vipExclusive = vipExclusive;
         this.reviews = new ArrayList<>();
+
     }
 
     public boolean isVipExclusive() {
