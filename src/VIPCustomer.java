@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.List;
 
 public class VIPCustomer extends Customer{
@@ -53,11 +54,16 @@ public class VIPCustomer extends Customer{
     }
     // implmement
     public void viewExclusiveMenuItems(){
-
+        System.out.println("VIP Exclusive Menu Items:");
+        List<MenuItem> exclusiveItems = MenuServiceImpl.getInstance().filterVipExclusiveItems();
+        for(MenuItem item: exclusiveItems){
+            System.out.printf("Name: %s | Price: ₹%.2f | Type: %s\n",
+                    item.getName(), item.getPrice(), item.getType());
+        }
     }
     //implement
     public void applyVIPDiscount(){
-
+        System.out.println("VIP Discounts are automatically applied at checkout.");
     }
     public void viewVIPStatistics(){
         System.out.println("VIP Statistics:");

@@ -49,7 +49,13 @@ public class MenuServiceImpl implements MenuService{
 
     @Override
     public void removeMenuItem(String itemName) {
-        menuItems.removeIf(item -> item.getName().equals(itemName));
+        boolean removed = menuItems.removeIf(item -> item.getName().equalsIgnoreCase(itemName));
+        if(removed){
+            System.out.println("Menu item '" + itemName + "' removed successfully.");
+        }
+        else{
+            System.out.println("Menu item '" + itemName + "' not found.");
+        }
     }
 
     @Override
@@ -110,7 +116,13 @@ public class MenuServiceImpl implements MenuService{
 
     @Override
     public List<MenuItem> filterVipExclusiveItems() {
-        return List.of();
+        List<MenuItem> results = new ArrayList<>();
+        for(MenuItem item : menuItems){
+            if(item.isVipExclusive()){
+                results.add(item);
+            }
+        }
+        return results;
     }
 
 }
