@@ -24,6 +24,9 @@ public class OrderManagerImpl implements OrderManager {
     @Override
     public void placeOrder(Order order, boolean isVIP){
         if(order != null){
+            if (isVIP) {
+//                order.setPriority(Order.Priority.HIGH);
+            }
             pendingOrders.offer(order);
             addToOrderHistory(order);
             System.out.println("Order placed successfully and added to pending orders.");

@@ -44,16 +44,17 @@ public class Admin extends User{
     }
     public void trackOrders() {
         System.out.println("Order Tracking! \nStatus: ");
-//        orderManager.trackOrders();
+        orderManager.trackOrders();
 
     }
 
-//    public void processOrder(Order order) {
-//        orderManager.processOrder(order); // Example method in OrderManager
-//    }
-//
-//    public void generateSalesReport() {
-//        reportGenerator.generateDailySalesReport();
-//    }
+    public void generateSalesReport() {
+
+        System.out.println("Generating Daily Sales Report...");
+
+        reportGenerator.generateDailySalesReport();
+        System.out.println("Generating Daily Sales Report...");
+
+    }
 
 }

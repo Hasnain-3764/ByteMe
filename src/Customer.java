@@ -24,14 +24,16 @@ public abstract class Customer extends User {
     public void viewOrderHistory(){
         CustomerService customerService = CustomerService.getInstance();
         List<Order> history = customerService.getOrderHistory(this.getLoginID());
-        if(history.isEmpty()){
-            System.out.println("You have no order history");
-            return;
-        }
-        System.out.println("Your order history: ");
-        for(Order order:history){
-            System.out.println(order);
-        }
+//        if(history.isEmpty()){
+//            System.out.println("You have no order history");
+//            return;
+//        }
+//        System.out.println("Your order history: ");
+//        for(Order order:history){
+//            System.out.println(order);
+//        }
+        TerminalInterface.displayOrderHistory(history); // use the display function
+
     }
     public abstract void placeOrder(Order order);
 

@@ -38,7 +38,7 @@ public class TerminalInterface {
                 case 2 -> admin.addMenuItem(createNewItem()); // to be implemented
                 case 3 -> admin.updateMenuItem(chooseItemToUpdate()); // to be implemented
                 case 4 -> admin.removeMenuItem(chooseItemToRemove()); // implement..
-//                case 5 -> admin.generateSalesReport(); // to be implemented.
+                case 5 -> admin.generateSalesReport(); // to be implemented.
                 case 6 -> admin.trackOrders();
                 case 7 -> adminUpdateOrderStatus(admin);
                 case 8 -> adminProcessRefund(admin); // to be implemented
@@ -312,7 +312,7 @@ public class TerminalInterface {
 
 
     // display funciton
-    private void displayOrderHistory(List<Order> history){
+    public static void displayOrderHistory(List<Order> history){
         if(history == null || history.isEmpty()) {
             System.out.println("No orders found in your history");
         }

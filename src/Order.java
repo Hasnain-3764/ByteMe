@@ -85,8 +85,11 @@ public class Order implements Comparable<Order> {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("Order TIme: ").append(orderTime).append("\n");
+        sb.append("Order ID: ").append(orderID).append("\n");
+        sb.append("Order Time: ").append(orderTime).append("\n");
         sb.append("Priority: ").append(priority).append("\n");
+        sb.append("Status: ").append(status).append("\n");
+        sb.append("Special Requests: ").append(specialRequest).append("\n");
         sb.append("Items: \n");
         for(OrderItem item: items){
             sb.append("- ").append(item.getMenuItem().getName())
@@ -95,7 +98,6 @@ public class Order implements Comparable<Order> {
         }
         sb.append("Total Price: ₹").append(getTotalPrice()).append("\n");
         sb.append("-------------------------");
-        return toString();
+        return sb.toString();
     }
-
 }
