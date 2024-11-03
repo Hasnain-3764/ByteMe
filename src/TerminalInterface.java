@@ -41,6 +41,7 @@ public class TerminalInterface {
 //                case 5 -> admin.generateSalesReport(); // to be implemented.
                 case 6 -> admin.trackOrders();
                 case 7 -> adminUpdateOrderStatus(admin);
+//                case 8 -> adminProcessRefunds(admin); // to be implemented
                 case 9 -> {
                     System.out.println("Logging out...");
                     return;
@@ -48,6 +49,12 @@ public class TerminalInterface {
                 default -> System.out.println("Invalid choice, try again");
             }
         }
+    }
+    private void adminProcessRefund(Admin admin){
+        System.out.println("Enter orderID to process refund:");
+        String orderID = scanner.nextLine().trim();
+        System.out.println("Order Manager Processing Refund");
+        // implement.
     }
     private void adminUpdateOrderStatus(Admin admin){
         System.out.println("Enter Order ID to update: ");

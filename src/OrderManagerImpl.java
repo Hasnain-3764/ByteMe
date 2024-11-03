@@ -44,6 +44,29 @@ public class OrderManagerImpl implements OrderManager {
 
     }
 
+    @Override// basically setting statuses
+    public void processRefund(String orderID){
+        Order order = null; // uninitialised. to be found from history
+        for(List<Order> orders : orderHistories.values()){
+            for(Order order1: orders){
+                if(order1.getOrderID().equals(orderID)) {
+                    order = order1;
+                    break;
+                }
+            }
+            if(order != null){
+                break;
+            }
+        }
+        if(order!=null){
+            order.setStatus(Order.OrderStatus.REFUNDED);
+            pendingOrders.remove(order);
+            System.out.println("Refund processing for orderID: "+orderID);
+        }
+        else{
+            System.out.println("OrderID not found");
+        }
+    }
 
 
 }
