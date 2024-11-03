@@ -17,15 +17,15 @@ public class VIPCustomer extends Customer{
         customerService.searchMenuItems(keyword);
     }
 
-//    @Override
-//    public void placeOrder(Order order) {
-//        try {
-//            customerService.placeOrder(this, order);
-//        } catch (DishNotAvailableException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        System.out.println("Priority Placing order");
-//    }
+    @Override
+    public void placeOrder(Order order) {
+        try {
+            customerService.placeOrder(this, order);
+        } catch (DishNotAvailableException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Priority Placing order");
+    }
 
 
 //    public void viewOrderHistory() {
@@ -35,6 +35,9 @@ public class VIPCustomer extends Customer{
 
     public void accessVIPBenefits(){
         System.out.println("Accessing VIP benefits...");
+        System.out.println("1. View Exclusive Items");
+        System.out.println("2. View Current Discounts");
+        // implmement
     }
 
 }

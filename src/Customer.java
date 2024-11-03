@@ -16,13 +16,23 @@ public abstract class Customer extends User {
         return rollNo;  // Returns rollNo as the unique login ID for Customer
     }
 
-//    public void viewOrderHistory() {
-//        // Implement viewing order history
-//    }
 
     public void addOrderToHistory(Order order){
         orderHistory.add(order);
     }
 
-//    public abstract void placeOrder(Order order);
+    public void viewOrderHistory(){
+        CustomerService customerService = CustomerService.getInstance();
+        List<Order> history = customerService.getOrderHistory(this.getLoginID());
+        if(history.isEmpty()){
+            System.out.println("You have no order history");
+            return;
+        }
+        System.out.println("Your order history: ");
+        for(Order order:history){
+            System.out.println(order);
+        }
+    }
+    public abstract void placeOrder(Order order);
+
 }

@@ -4,7 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7bc7820-c5a0-4cc0-8752-b657a62fc64f" name="Changes" comment="" />
+    <list default="true" id="a7bc7820-c5a0-4cc0-8752-b657a62fc64f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/ReportGeneratorImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CustomerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CustomerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MenuItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MenuItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RegularCustomer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RegularCustomer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TerminalInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TerminalInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/VIPCustomer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VIPCustomer.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

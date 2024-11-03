@@ -35,6 +35,8 @@ public class MenuItem {
         this.type = type;
     }
 
+
+
     public boolean isAvailable() {
         return availability;
     }

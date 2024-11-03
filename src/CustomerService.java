@@ -24,12 +24,20 @@ public class CustomerService {
             System.out.println("No items available in the menu.");
         }
         else{
-            System.out.println("Menu Items.");
-            items.forEach(item->System.out.printf(
-                    "Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n \n--------------------\n \n",
-                    item.getName(), item.getPrice(), item.getType(),
-                    item.isAvailable() ? "Available":"Unavailable"
-            ));
+//            System.out.println("Menu Items.");
+//            items.forEach(item->System.out.printf(
+//                    "Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n \n--------------------\n \n",
+//                    item.getName(), item.getPrice(), item.getType(),
+//                    item.isAvailable() ? "Available":"Unavailable"
+//            ));
+            for (MenuItem item : items) {
+                if (!item.isAvailable()) continue;
+                System.out.printf(
+                        "Name: %s | Price: ₹%.2f | Type: %s | Availability: %s\n",
+                        item.getName(), item.getPrice(), item.getType(),
+                        item.isAvailable() ? "Available" : "Unavailable"
+                );
+            }
         }
     }
 
@@ -40,14 +48,14 @@ public class CustomerService {
             System.out.println("No items found.");
         }
         else{
-            results.forEach(result -> System.out.printf("Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n--------------------\n",
+            results.forEach(result -> System.out.printf("Name: %s | Price: ₹%.2f | Type: %s | Availability: %s\n",
                     result.getName(), result.getPrice(), result.getType(),
                     result.isAvailable() ? "Available":"Unavailable"));
         }
     }
 
     public void placeOrder(Customer customer, Order order) throws DishNotAvailableException{
-        if(order==null){
+        if(order==null || order.getItems().isEmpty()){
             System.out.println("Nothing to order. Order creation was cancelled");
             return;
         }

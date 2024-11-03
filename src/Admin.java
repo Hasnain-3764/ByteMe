@@ -2,12 +2,16 @@ public class Admin extends User{
     private String adminId;
     private final CustomerService customerService;
     private final MenuService menuService;
+    private OrderManager orderManager;
+    private ReportGenerator reportGenerator;
 
     public Admin(String name, String password, String adminId){
         super(name,password);
         this.adminId = adminId;
         this.customerService = CustomerService.getInstance();
         this.menuService = MenuServiceImpl.getInstance();
+        this.orderManager = OrderManagerImpl.getInstance(); // Initialize orderManager
+        this.reportGenerator = new ReportGeneratorImpl(); // Assuming you have an implementation
     }
 
 

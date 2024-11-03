@@ -225,18 +225,12 @@ public class TerminalInterface {
 
     // display funciton
     private void displayOrderHistory(List<Order> history){
-        if(history == null){
+        if(history == null || history.isEmpty()) {
             System.out.println("No orders found in your history");
         }
         else{
-            for(Order order:history){
-                System.out.println("Order placed on: "+order.getOrderTime());
-                System.out.println("Items: ");
-                for(OrderItem item: order.getItems()){
-                    System.out.println("- "+item.getMenuItem().getName()+ " *" + item.getQuantity() + "(₹" + item.getTotalPrice() + ")");
-                }
-                System.out.println("Total price: ₹"+ order.getTotalPrice()); // total price to be implemented
-                System.out.println("-------------------------");
+            for(Order order:history){ // to string override
+                System.out.println(order);
             }
         }
     }
