@@ -133,9 +133,11 @@ public class TerminalInterface {
             System.out.println("4. View Order History");
             System.out.println("5. Become a VIP");
             System.out.println("6. Access Regular Benefits");
-            System.out.println("7. Logout");
+            System.out.println("7. Provide a Review");
+            System.out.println("8. View Item Reviews");
+            System.out.println("9. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 7);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 9);
 
             switch (choice) {
                 case 1 -> regularCustomer.browseMenu(); // to be implemented
@@ -159,7 +161,9 @@ public class TerminalInterface {
 //                case 4 -> regularCustomer.viewOrderHistory();
                 case 5 -> becomeVIP(regularCustomer); // special priveledge for our vips
                 case 6-> regularCustomer.accessRegularBenefits();
-                case 7 -> {
+//                case 7 -> provideReview(regularCustomer); // to be implemented
+//                case 8 -> viewItemReviews(); // to be implemented
+                case 9 -> {
                     System.out.println("Logging out...");
                     return; //exit to main menu
                 }
@@ -298,22 +302,9 @@ public class TerminalInterface {
 
     private String chooseItemToRemove() {
         System.out.println("Enter the name of the item to remove: ");
-        return scanner.nextLine();
+        return scanner.nextLine().trim();
     }
 
-//    private void searchMenuItems(){
-//        System.out.println("Enter keyword to search: ");
-//        String keyword = scanner.next();
-//        List<MenuItem> results = menuService.searchItems(keyword);
-//        if(results.isEmpty()){
-//            System.out.println("No items found.");
-//        }
-//        else{
-//            results.forEach(result -> System.out.printf("Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n--------------------\n",
-//                result.getName(), result.getPrice(), result.getType(),
-//                createNewItem().isAvailable() ? "Available":"Unavailable"));
-//        }
-//    }
 
     // display funciton
     private void displayOrderHistory(List<Order> history){
@@ -354,7 +345,7 @@ public class TerminalInterface {
                 continue;
             }
             System.out.println("Enter the quantity");
-            int quantity = InputUtils.readInt("Quantity: ", 1, 20);
+            int quantity = readIntInput(1, 100);
 
             OrderItem orderItem = new OrderItem(menuItem, quantity);
             orderItems.add(orderItem);

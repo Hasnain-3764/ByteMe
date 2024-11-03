@@ -23,7 +23,16 @@ public class OrderManagerImpl implements OrderManager {
 
     @Override
     public void placeOrder(Order order, boolean isVIP){
-        System.out.println("Order placed successfully");
+        if(order != null){
+            pendingOrders.offer(order);
+            addToOrderHistory(order);
+            System.out.println("Order placed successfully and added to pending orders.");
+        }
+    }
+
+    private void addToOrderHistory(Order order){
+        orderHistories.putIfAbsent(order.getCustomerID(), new ArrayList<>());
+        orderHistories.get(order.getCustomerID()).add(order);
     }
 
     @Override
@@ -33,8 +42,12 @@ public class OrderManagerImpl implements OrderManager {
 
     @Override
     public void trackOrders() {
+        if(pendingOrders.isEmpty()){
+            System.out.println("No pending orders.");
+            return;
+        }
         System.out.println("Pending Orders:");
-        for (Order order : pendingOrders) {
+        for(Order order : pendingOrders){
             System.out.println(order);
         }
     }
@@ -68,5 +81,25 @@ public class OrderManagerImpl implements OrderManager {
         }
     }
 
+    @Override
+    public void denyOrdersWithItem(String itemName){
+        List<Order> toDeny = new ArrayList<>();
+        for(Order order : pendingOrders){
+            for(OrderItem orderItem : order.getItems()){
+                if(orderItem.getMenuItem().getName().equalsIgnoreCase(itemName)){
+                    toDeny.add(order);
+                    break;
+                }
+            }
+        }
+        for(Order order : toDeny){
+            denyOrder(order); // to be implemented
+        }
+    }
 
+    private void denyOrder(Order order){
+        order.setStatus(Order.OrderStatus.DENIED);
+        pendingOrders.remove(order);
+        System.out.println("Order denied due to item unavailability: \n" + order);
+    }
 }

@@ -7,5 +7,6 @@ public interface OrderManager {
     void trackOrders(); // for admin to track orders
     void updateOrderStatus(String orderID, Order.OrderStatus newStatus);
     void processRefund(String orderID);
+    void denyOrdersWithItem(String itemName);
 
 }
