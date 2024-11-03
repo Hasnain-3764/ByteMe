@@ -31,7 +31,7 @@ public class TerminalInterface {
             System.out.println("8. Process Refunds");
             System.out.println("9. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 7);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 9);
             List<MenuItem> items = menuService.getAllItems();
             switch(choice){
                 case 1 -> customerService.browseMenu();
@@ -41,7 +41,7 @@ public class TerminalInterface {
 //                case 5 -> admin.generateSalesReport(); // to be implemented.
                 case 6 -> admin.trackOrders();
                 case 7 -> adminUpdateOrderStatus(admin);
-//                case 8 -> adminProcessRefunds(admin); // to be implemented
+                case 8 -> adminProcessRefund(admin); // to be implemented
                 case 9 -> {
                     System.out.println("Logging out...");
                     return;
@@ -54,7 +54,7 @@ public class TerminalInterface {
         System.out.println("Enter orderID to process refund:");
         String orderID = scanner.nextLine().trim();
         System.out.println("Order Manager Processing Refund");
-        // implement.
+        OrderManagerImpl.getInstance().processRefund(orderID);
     }
     private void adminUpdateOrderStatus(Admin admin){
         System.out.println("Enter Order ID to update: ");
@@ -179,6 +179,7 @@ public class TerminalInterface {
         System.out.println("To become a VIP, there is one-time upgrade fee of ₹1000.");
         System.out.println("Do you wish to proceed? (yes/no)");
         String response = scanner.next().trim().toLowerCase();
+        scanner.nextLine();
 
         if(response.equals("yes")){
             VIPCustomer vipCustomer = new VIPCustomer(
@@ -189,10 +190,7 @@ public class TerminalInterface {
             authenticator.upgradeToVIP(vipCustomer);
 //            showVIPCustomerMenu(vipCustomer);
             System.out.println("Congratulations! You are now a VIP customer.");
-            System.out.println("Please Log out .");
-            System.out.println("and log back in as VIP");
-
-
+            System.out.println("Please log out and log back in as VIP.");
         }
         else{
             System.out.println("Upgrade to VIP cancelled");
@@ -205,51 +203,97 @@ public class TerminalInterface {
         String name = scanner.nextLine();
 
         System.out.println("Enter item price: ");
-        double price = scanner.nextDouble();
+        double price = readDoubleInput(0, Double.MAX_VALUE);
         scanner.nextLine();
 
-        System.out.println("Enter item type: ");
-        String type = scanner.nextLine();
+        System.out.print("Enter item category (e.g., Snack, Beverage, Meal, Dessert): ");
+        String type = scanner.nextLine().trim();
 
         System.out.println("Is it available? (yes/no): ");
-        String input = scanner.next().trim().toLowerCase();
-        boolean availability = input.equals("yes");
-        scanner.nextLine();
+        boolean availability = readYesNo();
 
-        System.out.println("Is this a premium item");
-        input = scanner.next().trim().toLowerCase();
-        boolean isPremium = input.equals("yes");
-        scanner.nextLine();
+        System.out.print("Is this a VIP exclusive item? (yes/no): ");
+        boolean isVipExclusive = readYesNo();
 
-        return new MenuItem(name, price, type, availability, isPremium);
+        return new MenuItem(name, price, type, availability, isVipExclusive);
+    }
+
+    private int readIntInput(int min, int max){
+        int input = -1;
+        while(true){
+            try{
+                input = Integer.parseInt(scanner.nextLine().trim());
+                if(input >= min && input <= max){
+                    break;
+                }
+                else{
+                    System.out.print("Please enter a number between " + min + " and " + max + ": ");
+                }
+            }
+            catch(NumberFormatException e){
+                System.out.print("Invalid input. Please enter a numeric value: ");
+            }
+        }
+        return input;
+    }
+
+    private double readDoubleInput(double min, double max){
+        double input = -1;
+        while(true){
+            try{
+                input = Double.parseDouble(scanner.nextLine().trim());
+                if(input >= min && input <= max){
+                    break;
+                }
+                else{
+                    System.out.print("Please enter a value between " + min + " and " + max + ": ");
+                }
+            }
+            catch(NumberFormatException e){
+                System.out.print("Invalid input. Please enter a numeric value: ");
+            }
+        }
+        return input;
+    }
+
+    private boolean readYesNo(){
+        while(true){
+            String input = scanner.nextLine().trim().toLowerCase();
+            if(input.equals("yes") || input.equals("y")){
+                return true;
+            }
+            else if(input.equals("no") || input.equals("n")){
+                return false;
+            }
+            else{
+                System.out.print("Invalid input. Please enter yes or no: ");
+            }
+        }
     }
 
     private MenuItem chooseItemToUpdate(){
         System.out.println("Enter item name to update: ");
-        String name = scanner.nextLine();
-        MenuItem item = menuService.searchItems(name).stream().findFirst().orElse(null);
-        if(item == null){
+        String name = scanner.nextLine().trim();
+        List<MenuItem> items = menuService.searchItems(name);
+        if(items.isEmpty()){
             System.out.println("Item not found! ");
             return null;
         }
-        System.out.println("Enter new price: ");
-        double price = scanner.nextDouble();
-        scanner.nextLine();  // consume newline
+        MenuItem existingItem = items.get(0);
+        System.out.println("Enter new price (current: ₹" + existingItem.getPrice() + "): ");
+        double price = readDoubleInput(0, Double.MAX_VALUE);
 
-        System.out.println("Enter new type: ");
-        String type = scanner.nextLine();
+        System.out.println("Enter new category (current: " + existingItem.getType() + "): ");
+        String type = scanner.nextLine().trim();
 
-        System.out.println("Is it available? (yes/no): ");
-        String input = scanner.next().trim().toLowerCase();
-        boolean availability = input.equals("yes");
-        scanner.nextLine();
+        System.out.print("Is it available? (yes/no) (current: " + (existingItem.isAvailable() ? "Yes" : "No") + "): ");
+        boolean availability = readYesNo();
 
-        System.out.println("Is this a premium item");
-        input = scanner.next().trim().toLowerCase();
-        boolean isPremium = input.equals("yes");
-        scanner.nextLine();
 
-        return new MenuItem(name,price,type,availability, isPremium);
+        System.out.print("Is this a VIP exclusive item? (yes/no) (current: " + (existingItem.isVipExclusive() ? "Yes" : "No") + "): ");
+        boolean isVipExclusive = readYesNo();
+
+        return new MenuItem(name,price,type,availability, isVipExclusive);
     }
 
     private String chooseItemToRemove() {

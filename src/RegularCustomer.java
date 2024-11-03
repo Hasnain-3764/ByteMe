@@ -28,6 +28,7 @@ public class RegularCustomer extends Customer {
     }
 
     public void accessRegularBenefits() {
+        System.out.println("Accessing Regular customer benefits...");
         // Regular customer-specific benefits
     }
 

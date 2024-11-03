@@ -15,3 +15,4 @@ and everytime i create a user during runtime, how would this work then?
 9) to implement viewOrderHistory
 
 10) I want automatic logout when user converts to VIP, instead of asking him logout manually.
+11) what happens when admin enter wrong orderid?

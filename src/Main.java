@@ -17,7 +17,10 @@ public class Main {
             switch (choice) {
                 case 1 -> handleLogin();
                 case 2 -> handleSignup();
-                case 3 -> System.exit(0);
+                case 3 -> {
+                    System.out.println("Exiting the application. Goodbye!");
+                    System.exit(0);
+                }
                 default -> System.out.println("Invalid choice, please try again.");
             }
         }
@@ -84,11 +87,6 @@ public class Main {
         System.out.println("Enter your unique Admin ID");
     }
 
-    private static void adminSignUp(){
-        System.out.println("Hello Admins");
-        System.out.println("To confirm its you, please: ");
-        System.out.println("Enter your unique Admin ID");
-    }
 
     private static void handleSignup(){
         System.out.println("Sign up as: ");
