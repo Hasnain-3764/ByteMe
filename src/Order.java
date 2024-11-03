@@ -29,7 +29,13 @@ public class Order implements Comparable<Order> {
     public List<OrderItem> getItems() {
         return items;
     }
-
+    public double getTotalPrice(){
+        double totalPrice = 0;
+        for(OrderItem item : items){
+            totalPrice += item.getTotalPrice();
+        }
+        return totalPrice;
+    }
     @Override
     public int compareTo(Order other) {
         int priorityComparison = other.priority.compareTo(this.priority);

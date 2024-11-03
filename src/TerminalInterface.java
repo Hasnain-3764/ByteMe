@@ -235,7 +235,7 @@ public class TerminalInterface {
                 for(OrderItem item: order.getItems()){
                     System.out.println("- "+item.getMenuItem().getName()+ " *" + item.getQuantity() + "(₹" + item.getTotalPrice() + ")");
                 }
-//                System.out.println("Total price: ₹"+ order.getToalPrice()); // total price to be implemented
+                System.out.println("Total price: ₹"+ order.getTotalPrice()); // total price to be implemented
                 System.out.println("-------------------------");
             }
         }

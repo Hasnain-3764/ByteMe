@@ -16,24 +16,24 @@ public class RegularCustomer extends Customer {
         customerService.searchMenuItems(keyword);
     }
 
-    @Override
-    public void placeOrder(Order order) {
-        try {
-            customerService.placeOrder(this, order);
-        } catch (DishNotAvailableException e) {
-            System.out.println(e.getMessage());
-        }
-
-        System.out.println("Placing order.");
-    }
+//    @Override
+//    public void placeOrder(Order order) {
+//        try {
+//            customerService.placeOrder(this, order);
+//        } catch (DishNotAvailableException e) {
+//            System.out.println(e.getMessage());
+//        }
+//
+//        System.out.println("Placing order.");
+//    }
 
     public void accessRegularBenefits() {
         // Regular customer-specific benefits
     }
 
-    public void viewOrderHistory() {
-        OrderManager orderManager = OrderManagerImpl.getInstance();
-        System.out.println("Viewing order history:");
-    }
+//    public void viewOrderHistory() {
+//        OrderManager orderManager = OrderManagerImpl.getInstance();
+//        System.out.println("Viewing order history:");
+//    }
 
 }

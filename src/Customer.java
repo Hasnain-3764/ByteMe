@@ -24,5 +24,5 @@ public abstract class Customer extends User {
         orderHistory.add(order);
     }
 
-    public abstract void placeOrder(Order order);
+//    public abstract void placeOrder(Order order);
 }
