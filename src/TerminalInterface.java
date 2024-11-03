@@ -50,12 +50,14 @@ public class TerminalInterface {
             }
         }
     }
+
     private void adminProcessRefund(Admin admin){
         System.out.println("Enter orderID to process refund:");
         String orderID = scanner.nextLine().trim();
         System.out.println("Order Manager Processing Refund");
         OrderManagerImpl.getInstance().processRefund(orderID);
     }
+
     private void adminUpdateOrderStatus(Admin admin){
         System.out.println("Enter Order ID to update: ");
         String orderID = scanner.nextLine().trim();
@@ -89,10 +91,11 @@ public class TerminalInterface {
             System.out.println("3. Place an Order");
             System.out.println("4. View Order History");
             System.out.println("5. Access VIP Benefits");
+            System.out.println("6. Provide a Review");
+            System.out.println("7. View Item Reviews");
+            System.out.println("8. Logout");
 
-            System.out.println("6. Logout");
-
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 6);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 8);
 
             switch(choice){
                 case 1 ->  customerService.browseMenu(); // to be implemented
@@ -115,7 +118,9 @@ public class TerminalInterface {
                 }
 //                case 4 -> vipCustomer.viewOrderHistory();
                 case 5 -> vipCustomer.accessVIPBenefits();
-                case 6 -> {
+                case 6 -> provideReview(vipCustomer);
+                case 7 -> viewItemReviews();
+                case 8 -> {
                     System.out.println("Logging out...");
                     return;
                 }
@@ -161,8 +166,8 @@ public class TerminalInterface {
 //                case 4 -> regularCustomer.viewOrderHistory();
                 case 5 -> becomeVIP(regularCustomer); // special priveledge for our vips
                 case 6-> regularCustomer.accessRegularBenefits();
-//                case 7 -> provideReview(regularCustomer); // to be implemented
-//                case 8 -> viewItemReviews(); // to be implemented
+                case 7 -> provideReview(regularCustomer); // to be implemented
+                case 8 -> viewItemReviews(); // to be implemented
                 case 9 -> {
                     System.out.println("Logging out...");
                     return; //exit to main menu
@@ -366,7 +371,46 @@ public class TerminalInterface {
         return new Order(customer.getLoginID(),priority,orderItems, specialRequest);
     }
 
+    private void provideReview(Customer customer){
+        System.out.println("Enter the name of the item you want to review: ");
+        String itemName = scanner.nextLine().trim();
+        List<MenuItem> items = menuService.searchItems(itemName);
+        if(items.isEmpty()){
+            System.out.println("Item not found.");
+            return;
+        }
+        MenuItem item = items.get(0); // assumption: only one item with one name
+        System.out.println("Enter your rating (0.0 - 5.0): ");
+        double rating = readDoubleInput(0,5);
 
+        System.out.println("Enter your review: ");
+        String reviewText = scanner.nextLine().trim();
+        Review review = new Review(customer.getLoginID(),item.getName(), reviewText, rating);
+        item.addReview(review);
+        System.out.println("Reveiw added successfully");
+
+
+    }
+
+    private void viewItemReviews(){
+        System.out.println("Enter the name of the product you want to see reivews");
+        String itemName = scanner.nextLine().trim();
+        List<MenuItem> items = menuService.searchItems(itemName);
+        if(items.isEmpty()){
+            System.out.println("No item found with this name.");
+            return;
+        }
+        MenuItem item = items.get(0); // assuming only one item wiht one name
+        List<Review> reviews = item.getReviews();
+        if(reviews.isEmpty()){
+            System.out.println("No reviews for this item so far.");
+            return;
+        }
+        System.out.println("Reviews for "+item.getName()+": ");
+        for(Review review: reviews){
+            System.out.println(review);
+        }
+    }
 
 
 
