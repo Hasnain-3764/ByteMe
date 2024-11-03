@@ -9,7 +9,7 @@ public class Order implements Comparable<Order> {
     }
 
     public enum OrderStatus{
-        RECEIVED, PREPARING, DENIED, CANCELLED, REFUNED, READY
+        RECEIVED, PREPARING, OUT_FOR_DELIVERY, DELIVERED, DENIED, CANCELED, REFUNDED
     }
 
     private String customerID;

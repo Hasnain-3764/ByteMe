@@ -27,7 +27,9 @@ public class TerminalInterface {
             System.out.println("4. Remove Menu Item");
             System.out.println("5. Generate Sales Report");
             System.out.println("6, Track Orders");
-            System.out.println("7. Logout");
+            System.out.println("7. Update Order Status");
+            System.out.println("8. Process Refunds");
+            System.out.println("9. Logout");
 
             int choice = InputUtils.readInt("Enter your choice: ", 1, 7);
             List<MenuItem> items = menuService.getAllItems();
@@ -38,13 +40,38 @@ public class TerminalInterface {
                 case 4 -> admin.removeMenuItem(chooseItemToRemove()); // implement..
 //                case 5 -> admin.generateSalesReport(); // to be implemented.
                 case 6 -> admin.trackOrders();
-                case 7 -> {
+                case 7 -> adminUpdateOrderStatus(admin);
+                case 9 -> {
                     System.out.println("Logging out...");
                     return;
                 }
                 default -> System.out.println("Invalid choice, try again");
             }
         }
+    }
+    private void adminUpdateOrderStatus(Admin admin){
+        System.out.println("Enter Order ID to update: ");
+        String orderID = scanner.nextLine().trim();
+        System.out.println("Choose new status: ");
+        System.out.println("1. RECIEVED");
+        System.out.println("2. PREPARING");
+        System.out.println("3. OUT_FOR_DELIVERY");
+        System.out.println("4. DELIVERED");
+        System.out.println("5. CANCELED");
+        System.out.println("6. REFUNDED");
+        int choice = InputUtils.readInt("Enter your choice: ", 1, 6);
+        Order.OrderStatus newStatus = switch(choice){
+
+            case 1 -> Order.OrderStatus.RECEIVED;
+            case 2 -> Order.OrderStatus.PREPARING;
+            case 3 -> Order.OrderStatus.OUT_FOR_DELIVERY;
+            case 4 -> Order.OrderStatus.DELIVERED;
+            case 5 -> Order.OrderStatus.CANCELED;
+            case 6 -> Order.OrderStatus.REFUNDED;
+            default -> Order.OrderStatus.RECEIVED; // Default
+        };
+        OrderManagerImpl.getInstance().updateOrderStatus(orderID, newStatus);
+
     }
 
     public void showVIPCustomerMenu(VIPCustomer vipCustomer){
@@ -255,6 +282,8 @@ public class TerminalInterface {
 
     private Order createOrder(Customer customer){
         List <OrderItem> orderItems = new ArrayList<>();
+        System.out.print("Enter any special requests (or press Enter to skip): ");
+        String specialRequest = scanner.nextLine().trim();
         while(true){
             System.out.println("Enter the name of item to add to your order (type done to finish): ");
             String itemName = scanner.nextLine().trim();
@@ -292,7 +321,7 @@ public class TerminalInterface {
         else{
             priority = Order.Priority.NORMAL;
         }
-        return new Order(customer.getLoginID(),priority,orderItems);
+        return new Order(customer.getLoginID(),priority,orderItems, specialRequest);
     }
 
 

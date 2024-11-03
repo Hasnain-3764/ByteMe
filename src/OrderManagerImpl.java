@@ -4,7 +4,7 @@ public class OrderManagerImpl implements OrderManager {
     private static OrderManagerImpl instance;
 
     private final PriorityQueue<Order> pendingOrders;
-    private Map<String, List<Order>> orderHistories;
+    protected Map<String, List<Order>> orderHistories; // as we want it in other classes too
 
     private OrderManagerImpl() {
         Comparator<Order> orderComparator = Comparator
@@ -38,5 +38,12 @@ public class OrderManagerImpl implements OrderManager {
             System.out.println(order);
         }
     }
+
+    @Override
+    public void updateOrderStatus(String orderID, Order.OrderStatus newStatus){
+
+    }
+
+
 
 }
