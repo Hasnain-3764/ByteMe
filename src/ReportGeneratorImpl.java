@@ -13,30 +13,35 @@ public class ReportGeneratorImpl implements ReportGenerator{
     }
 
     @Override
-    public void generateDailySalesReport() {
+    public void generateDailySalesReport(){
+        // Assuming daily report is based on orderTime's date
         LocalDate today = LocalDate.now();
         double totalSales = 0;
+        int totalOrders = 0;
         Map<String, Integer> itemPopularity = new HashMap<>();
-        int totalOrder = 0;
-        for(List<Order> orders: orderManager.orderHistories.values()){
-            for(Order order1:orders){
-                if(order1.getStatus() == Order.OrderStatus.DELIVERED){
-                    totalSales += order1.getTotalPrice();
-                    totalOrder++;
-                    for(OrderItem item : order1.getItems()){
-                        itemPopularity.put(item.getMenuItem().getName(),
-                                itemPopularity.getOrDefault(item.getMenuItem().getName(), item.getQuantity()));
+
+        for(List<Order> orders : orderManager.orderHistories.values()){
+            for(Order order : orders){
+                if(order.getOrderTime().toLocalDate().isEqual(today)){
+                    if(order.getStatus() == Order.OrderStatus.DELIVERED){
+                        totalSales += order.getTotalPrice();
+                        totalOrders++;
+                        for(OrderItem item : order.getItems()){
+                            itemPopularity.put(item.getMenuItem().getName(),
+                                    itemPopularity.getOrDefault(item.getMenuItem().getName(), 0) + item.getQuantity());
+                        }
                     }
                 }
             }
         }
-        List<Map.Entry<String,Integer>> popularItems = new ArrayList<>(itemPopularity.entrySet());
-        popularItems.sort((a,b) -> b.getValue() - a.getValue());
+        // finding most popular dishes
+        List<Map.Entry<String, Integer>> popularItems = new ArrayList<>(itemPopularity.entrySet());
+        popularItems.sort((a, b) -> b.getValue() - a.getValue());
 
-        // printing report
+        // Print report
         System.out.println("Daily Sales Report for " + today);
         System.out.println("Total Sales: ₹" + totalSales);
-        System.out.println("Total Orders: " + totalOrder);
+        System.out.println("Total Orders: " + totalOrders);
         System.out.println("Most Popular Items:");
         for(int i=0; i < Math.min(5, popularItems.size()); i++){
             Map.Entry<String, Integer> entry = popularItems.get(i);

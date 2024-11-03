@@ -56,6 +56,10 @@ public class VIPCustomer extends Customer{
     public void viewExclusiveMenuItems(){
         System.out.println("VIP Exclusive Menu Items:");
         List<MenuItem> exclusiveItems = MenuServiceImpl.getInstance().filterVipExclusiveItems();
+        if(exclusiveItems.isEmpty()){
+            System.out.println("No exclusive items available.");
+            return;
+        }
         for(MenuItem item: exclusiveItems){
             System.out.printf("Name: %s | Price: ₹%.2f | Type: %s\n",
                     item.getName(), item.getPrice(), item.getType());
@@ -66,6 +70,13 @@ public class VIPCustomer extends Customer{
         System.out.println("VIP Discounts are automatically applied at checkout.");
     }
     public void viewVIPStatistics(){
+        List<Order> history = customerService.getOrderHistory(this.getLoginID()); // to be reviewed
+        int totalOrders = history.size();
+        double totalSpent = 0;
+        for(Order order : history){
+            totalSpent += order.getTotalPrice();
+        }
+
         System.out.println("VIP Statistics:");
         System.out.println("Total Orders Placed: ");
         System.out.println("Total Amount Spent: ");

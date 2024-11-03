@@ -7,6 +7,7 @@ public class AuthenticationManager {
     private Map<String, User> userMap;
     private static Scanner scanner = new Scanner(System.in);
     private static AuthenticationManager instance;
+
     // private constructor to avoid instantiation.
     private AuthenticationManager(){
         userMap = new HashMap<>();
