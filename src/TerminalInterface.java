@@ -232,7 +232,7 @@ public class TerminalInterface {
         while(true){
             System.out.println("Enter the name of item to add to your order (type done to finish): ");
             String itemName = scanner.nextLine().trim();
-            if(itemName == "done"){
+            if(itemName.equalsIgnoreCase("done")){
                 break;
             }
             // checking if it is availabel
@@ -242,6 +242,11 @@ public class TerminalInterface {
                 continue;
             }
             MenuItem menuItem = search.get(0); // for now, considering only one item with one name.
+            // checking if available
+            if (!menuItem.isAvailable()) {
+                System.out.println("Sorry, this item is currently unavailable.");
+                continue;
+            }
             System.out.println("Enter the quantity");
             int quantity = InputUtils.readInt("Quantity: ", 1, 20);
 
@@ -250,11 +255,18 @@ public class TerminalInterface {
             System.out.println("Item added to list");
 
         }
-        if(orderItems == null){
+        if(orderItems.isEmpty()){
             System.out.println("No items were added to cart");
             return null;
         }
-        return new Order(customer.getLoginID(), "HIGH",orderItems);
+        Order.Priority priority;
+        if(customer instanceof VIPCustomer){
+            priority = Order.Priority.HIGH;
+        }
+        else{
+            priority = Order.Priority.NORMAL;
+        }
+        return new Order(customer.getLoginID(),priority,orderItems);
     }
 
 }
