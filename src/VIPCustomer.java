@@ -37,7 +37,32 @@ public class VIPCustomer extends Customer{
         System.out.println("Accessing VIP benefits...");
         System.out.println("1. View Exclusive Items");
         System.out.println("2. View Current Discounts");
-        // implmement
+        System.out.println("3. View VIP Statistics");
+        System.out.println("4. Back to VIP Menu");
+        int choice = InputUtils.readInt("Enter your choice: ", 1, 4);
+
+        switch(choice){
+            case 1 -> viewExclusiveMenuItems();
+            case 2 -> applyVIPDiscount();
+            case 3 -> viewVIPStatistics();
+            case 4 -> System.out.println("Returning to VIP Menu...");
+            default -> System.out.println("Invalid choice. Try again.");
+        }
+
+
+    }
+    // implmement
+    public void viewExclusiveMenuItems(){
+
+    }
+    //implement
+    public void applyVIPDiscount(){
+
+    }
+    public void viewVIPStatistics(){
+        System.out.println("VIP Statistics:");
+        System.out.println("Total Orders Placed: ");
+        System.out.println("Total Amount Spent: ");
     }
 
 }

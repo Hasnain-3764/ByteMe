@@ -108,4 +108,9 @@ public class MenuServiceImpl implements MenuService{
         return results;
     }
 
+    @Override
+    public List<MenuItem> filterVipExclusiveItems() {
+        return List.of();
+    }
+
 }

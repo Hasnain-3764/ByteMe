@@ -9,5 +9,6 @@ public interface MenuService {
     List<MenuItem> filterItemsByCategory(String category);  // filter items by category
     List<MenuItem> sortItemsByPrice(boolean ascending);  // sort items by price
     List<MenuItem> filterItemsByAvailability(boolean available); // sort based on availability
+    List<MenuItem> filterVipExclusiveItems(); // VIP-exclusive items
 
 }
