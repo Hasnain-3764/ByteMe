@@ -68,12 +68,12 @@ public class TerminalInterface {
                     customerService.searchMenuItems(keyword); // to be implemented
                 }
                 case 3 -> {
-//                    Order order = createOrder(vipCustomer); // create an Order object
-//                    try {
-//                        customerService.placeOrder(vipCustomer, order);
-//                    } catch (DishNotAvailableException e) {
-//                        System.out.println(e.getMessage());
-//                    }
+                    Order order = createOrder(vipCustomer); // create an Order object
+                    try {
+                        customerService.placeOrder(vipCustomer, order);
+                    } catch (DishNotAvailableException e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
 //                case 4 -> {
 //                    List<Order> history = customerService.getOrderHistory(vipCustomer.getLoginID());
@@ -111,12 +111,12 @@ public class TerminalInterface {
                     regularCustomer.searchMenuItems(keyword); // to be implemented
                 }
                 case 3 -> {
-//                    Order order = createOrder(regularCustomer); // create an Order object
-//                    try {
-//                        customerService.placeOrder(regularCustomer, order);
-//                    } catch (DishNotAvailableException e) {
-//                        System.out.println(e.getMessage());
-//                    }
+                    Order order = createOrder(regularCustomer);
+                    try {
+                        customerService.placeOrder(regularCustomer, order);
+                    } catch (DishNotAvailableException e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
                 case 4 -> regularCustomer.viewOrderHistory();
                 case 5 -> becomeVIP(regularCustomer); // special priveledge for our vips
@@ -268,5 +268,9 @@ public class TerminalInterface {
         }
         return new Order(customer.getLoginID(),priority,orderItems);
     }
+
+
+
+
 
 }

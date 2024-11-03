@@ -47,6 +47,15 @@ public class CustomerService {
     }
 
     public void placeOrder(Customer customer, Order order) throws DishNotAvailableException{
+        if(order==null){
+            System.out.println("Nothing to order. Order creation was cancelled");
+            return;
+        }
+        boolean isVIP = customer instanceof VIPCustomer;
+        orderManager.placeOrder(order,isVIP);
+        //add order to custormer history
+//        customer.addOrderToHistory(order); //to be implemented
+        System.out.println("Order placed successfully");
     }
 
 }
