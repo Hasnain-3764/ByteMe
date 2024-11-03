@@ -75,11 +75,11 @@ public class TerminalInterface {
                         System.out.println(e.getMessage());
                     }
                 }
-//                case 4 -> {
-//                    List<Order> history = customerService.getOrderHistory(vipCustomer.getLoginID());
-//                    displayOrderHistory(history);
-//                }
-                case 4 -> vipCustomer.viewOrderHistory();
+                case 4 -> {
+                    List<Order> history = customerService.getOrderHistory(vipCustomer.getLoginID());
+                    displayOrderHistory(history);
+                }
+//                case 4 -> vipCustomer.viewOrderHistory();
                 case 5 -> vipCustomer.accessVIPBenefits();
                 case 6 -> {
                     System.out.println("Logging out...");
@@ -118,7 +118,11 @@ public class TerminalInterface {
                         System.out.println(e.getMessage());
                     }
                 }
-                case 4 -> regularCustomer.viewOrderHistory();
+                case 4 -> {
+                    List<Order> history = customerService.getOrderHistory(regularCustomer.getLoginID());
+                    displayOrderHistory(history);
+                }
+//                case 4 -> regularCustomer.viewOrderHistory();
                 case 5 -> becomeVIP(regularCustomer); // special priveledge for our vips
                 case 6-> regularCustomer.accessRegularBenefits();
                 case 7 -> {
@@ -219,8 +223,22 @@ public class TerminalInterface {
 //        }
 //    }
 
-    public void regularToVip(){
-
+    // display funciton
+    private void displayOrderHistory(List<Order> history){
+        if(history == null){
+            System.out.println("No orders found in your history");
+        }
+        else{
+            for(Order order:history){
+                System.out.println("Order placed on: "+order.getOrderTime());
+                System.out.println("Items: ");
+                for(OrderItem item: order.getItems()){
+                    System.out.println("- "+item.getMenuItem().getName()+ " *" + item.getQuantity() + "(₹" + item.getTotalPrice() + ")");
+                }
+//                System.out.println("Total price: ₹"+ order.getToalPrice()); // total price to be implemented
+                System.out.println("-------------------------");
+            }
+        }
     }
 
     private void generateSalesReport(){

@@ -16,9 +16,9 @@ public abstract class Customer extends User {
         return rollNo;  // Returns rollNo as the unique login ID for Customer
     }
 
-    public void viewOrderHistory() {
-        // Implement viewing order history
-    }
+//    public void viewOrderHistory() {
+//        // Implement viewing order history
+//    }
 
     public void addOrderToHistory(Order order){
         orderHistory.add(order);
