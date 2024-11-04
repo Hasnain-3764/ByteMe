@@ -108,7 +108,7 @@ public class TerminalInterface {
                     customerService.searchMenuItems(keyword); // to be implemented
                 }
                 // to be implemented
-//                case 3 -> addItemToCart(vipCustomer);
+                case 3 -> addItemToCart(vipCustomer);
 //                case 4 -> viewCart(vipCustomer);
 //                case 5 -> modifyCart(vipCustomer);
 //                case 6 -> checkOut(vipCustomer);
@@ -172,7 +172,7 @@ public class TerminalInterface {
 //                }
 
                 // to be implemented
-//                case 3 -> addItemToCart(regularCustomer);
+                case 3 -> addItemToCart(regularCustomer);
 //                case 4 -> viewCart(regularCustomer);
 //                case 5 -> modifyCart(regularCustomer);
 //                case 6 -> checkout(regularCustomer);
@@ -200,6 +200,42 @@ public class TerminalInterface {
 //        // For brevity, assume we return a new Order object
 //        return
 //    }
+
+    private void addItemToCart(Customer customer){
+        System.out.println("Enter the name of item to add to your cart: ");
+        String itemName = scanner.nextLine().trim();
+        List<MenuItem> search = menuService.searchItems(itemName);
+        if(search.isEmpty()){
+            System.out.println("Item not found. Please try again.");
+            return;
+        }
+        MenuItem menuItem = search.get(0); // assuming single item with one name
+        if(!menuItem.isAvailable()){
+            System.out.println("Item is not available. Can't add to cart.");
+            return;
+        }
+        int quantity = InputUtils.readInt("Enter the quantity: ", 1, 100);
+        customer.getCart().addItem(menuItem,quantity);
+        System.out.println("Item added to cart successfully");
+    }
+
+    private void viewCart(Customer customer){
+        Cart cart = customer.getCart(); // every customer has a unique cart
+        if(cart.isEmpty()){
+            System.out.println("Your Cart is Empty.");
+            return;
+        }
+        System.out.println("Your Cart: ");
+        for(OrderItem item: cart.getItems()){
+            System.out.println(item.getMenuItem().getName() + " X" +
+            item.getQuantity() + " = ₹" + item.getTotalPrice());
+        }
+        System.out.println("Total Price: ₹"+cart.getTotalPrice());
+    }
+
+    private void modifyCart(Customer customer){
+
+    }
 
     private void becomeVIP(RegularCustomer regularCustomer){
         System.out.println("To become a VIP, there is one-time upgrade fee of ₹1000.");
