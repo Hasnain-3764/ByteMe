@@ -4,11 +4,13 @@ import java.util.List;
 public abstract class Customer extends User {
     private String rollNo;
     private List<Order> orderHistory;
+    private Cart cart;
 
     public Customer(String name, String password, String rollNo) {
         super(name, password);
         this.rollNo = rollNo;
         this.orderHistory = new ArrayList<>();
+        this.cart = new Cart();
     }
 
     @Override
@@ -34,6 +36,9 @@ public abstract class Customer extends User {
 //        }
         TerminalInterface.displayOrderHistory(history); // use the display function
 
+    }
+    public Cart getCart() { // Getter for Cart
+        return cart;
     }
     public abstract void placeOrder(Order order);
 

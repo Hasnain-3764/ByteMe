@@ -35,4 +35,23 @@ public class Cart {
             }
         }
     }
+
+    public double getTotalPrice(){
+        double totalPrice = 0;
+        for(OrderItem item: items){
+            totalPrice += item.getTotalPrice();
+        }
+        return totalPrice;
+    }
+    public void clear() {
+        items.clear();
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
 }

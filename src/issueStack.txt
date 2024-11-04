@@ -16,3 +16,18 @@ and everytime i create a user during runtime, how would this work then?
 
 10) I want automatic logout when user converts to VIP, instead of asking him logout manually.
 11) what happens when admin enter wrong orderid?
+12) after placing order, customers should be able to see a receipt of the bill(with splitting)
+13) when vip view exclusive items, they should be able to order them too from that window itself.
+14) vip will see only available exclusive items.
+15) vip total should show the discount too, otherwise the final total price wont make sense
+16) vip stats not showing.
+17) sales report showing zero even after significant sales. resolved
+18) to be implemented: When an item is removed, the status of all pending orders containing that item will be updated to
+                       ’denied’.
+19) Orders should be handled in the order they were received, ensuring fair processing.
+20) Orders from VIP customers should be given priority in the order processing flow. You can
+    become a VIP by paying a specified amount.
+    – Regular: Regular customers’ orders will be processed in the order they are received but will only
+    be handled after all VIP orders have been processed.
+21) Cancel order: Customers can cancel their orders before they are prepared or processed.
+22) – Order history: Customers can view their past orders and re-order previous meals if desired.
