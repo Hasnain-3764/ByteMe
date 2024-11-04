@@ -96,9 +96,11 @@ public class TerminalInterface {
             System.out.println("8. Access VIP Benefits");
             System.out.println("9. Provide a Review");
             System.out.println("10. View Item Reviews");
-            System.out.println("11. Logout");
+            System.out.println("11. Sort Menu Items by Price");
+            System.out.println("12. Filter Menu Items by Category");
+            System.out.println("13. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 11);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 13);
 
             switch(choice){
                 case 1 ->  customerService.browseMenu(); // to be implemented
@@ -128,7 +130,9 @@ public class TerminalInterface {
                 case 8 -> vipCustomer.accessVIPBenefits();
                 case 9 -> provideReview(vipCustomer);
                 case 10 -> viewItemReviews();
-                case 11 -> {
+                case 11 -> sortMenuItems(vipCustomer);
+                case 12 -> filterMenuItems(vipCustomer);
+                case 13 -> {
                     System.out.println("Logging out...");
                     return;
                 }
@@ -151,7 +155,9 @@ public class TerminalInterface {
             System.out.println("9. Access Regular Benefits");
             System.out.println("10. Provide a Review");
             System.out.println("11. View Item Reviews");
-            System.out.println("12. Logout");
+            System.out.println("11. Sort Menu Items by Price");
+            System.out.println("12. Filter Menu Items by Category");
+            System.out.println("14. Logout");
 
             int choice = InputUtils.readInt("Enter your choice: ", 1, 9);
 
@@ -185,7 +191,9 @@ public class TerminalInterface {
                 case 9-> regularCustomer.accessRegularBenefits();
                 case 10 -> provideReview(regularCustomer); // to be implemented
                 case 11 -> viewItemReviews(); // to be implemented
-                case 12 -> {
+                case 12 -> sortMenuItems(regularCustomer);
+                case 13 -> filterMenuItems(regularCustomer);
+                case 14 -> {
                     System.out.println("Logging out...");
                     return; //exit to main menu
                 }
@@ -200,6 +208,45 @@ public class TerminalInterface {
 //        // For brevity, assume we return a new Order object
 //        return
 //    }
+
+    private void sortMenuItems(Customer customer){
+        System.out.println("Sort Menu Items By Price:");
+        System.out.println("1. Ascending");
+        System.out.println("2. Descending");
+        int choice = InputUtils.readInt("Enter your choice: ", 1, 2);
+        boolean ascending = choice == 1;
+        List<MenuItem> sortedItems = menuService.sortItemsByPrice(ascending);
+        if(sortedItems.isEmpty()){
+            System.out.println("No items available.");
+        } else {
+            System.out.println("Sorted Menu Items:");
+            for(MenuItem item : sortedItems){
+                System.out.printf("Name: %s | Price: ₹%.2f | Type: %s | Availability: %s\n",
+                        item.getName(), item.getPrice(), item.getType(),
+                        item.isAvailable() ? "Available" : "Unavailable");
+            }
+        }
+    }
+
+    private void filterMenuItems(Customer customer){
+        System.out.println("Filter Menu Items By Category:");
+        System.out.println("Available Categories: Snack, Beverage, Meal, Dessert");
+        System.out.print("Enter category to filter: ");
+        String category = scanner.nextLine().trim();
+        List<MenuItem> filteredItems = menuService.filterItemsByCategory(category);
+        if(filteredItems.isEmpty()){
+            System.out.println("No items found for category: " + category);
+        }
+        else{
+            System.out.println("Filtered Menu Items:");
+            for(MenuItem item : filteredItems){
+                System.out.printf("Name: %s | Price: ₹%.2f | Type: %s | Availability: %s\n",
+                        item.getName(), item.getPrice(), item.getType(),
+                        item.isAvailable() ? "Available" : "Unavailable");
+            }
+        }
+    }
+
 
     private void addItemToCart(Customer customer){
         System.out.println("Enter the name of item to add to your cart: ");
@@ -267,8 +314,12 @@ public class TerminalInterface {
     }
 
     private void checkOut(Customer customer){
-        System.out.println("Proceeding to checkout...");
         Cart cart = customer.getCart();
+        if(cart.isEmpty()){
+            System.out.println("Your cart is empty.");
+            return;
+        }
+        System.out.println("Proceeding to checkout...");
         viewCart(customer);
         System.out.println("Enter any special requests (or press Enter to skip): ");
         String specialRequests = scanner.nextLine().trim();
@@ -277,14 +328,15 @@ public class TerminalInterface {
         List<OrderItem> orderItems = new ArrayList<>(cart.getItems());
         Order.Priority priority = (customer instanceof VIPCustomer) ? Order.Priority.HIGH : Order.Priority.NORMAL;
         Order order = new Order(customer.getLoginID(), priority,orderItems,specialRequests + " | Delivery Address: "+deliveryAddress);
-        try{
+
+        try {
             customer.placeOrder(order);
-        } catch (DishNotAvailableException e){
+            cart.clear();
+            System.out.println("Checkout successful. Your order has been placed.");
+            displayReceipt(order);
+        } catch (DishNotAvailableException e) {
             System.out.println(e.getMessage());
-            return;
         }
-        cart.clear();
-        System.out.println("Checkout successful. Your order has been placed.");
     }
 
     private void becomeVIP(RegularCustomer regularCustomer){
@@ -293,7 +345,7 @@ public class TerminalInterface {
         String response = scanner.next().trim().toLowerCase();
         scanner.nextLine();
 
-        if(response.equals("yes")){
+        if(response.equals("yes") || response.equals("y") ){
             VIPCustomer vipCustomer = new VIPCustomer(
                     regularCustomer.getName(),
                     regularCustomer.getPassword(),
@@ -330,24 +382,6 @@ public class TerminalInterface {
         return new MenuItem(name, price, type, availability, isVipExclusive);
     }
 
-    private int readIntInput(int min, int max){
-        int input = -1;
-        while(true){
-            try{
-                input = Integer.parseInt(scanner.nextLine().trim());
-                if(input >= min && input <= max){
-                    break;
-                }
-                else{
-                    System.out.print("Please enter a number between " + min + " and " + max + ": ");
-                }
-            }
-            catch(NumberFormatException e){
-                System.out.print("Invalid input. Please enter a numeric value: ");
-            }
-        }
-        return input;
-    }
 
     private double readDoubleInput(double min, double max){
         double input = -1;
@@ -415,64 +449,112 @@ public class TerminalInterface {
 
 
     // display funciton
-    public static void displayOrderHistory(List<Order> history){
+    public static void displayOrderHistory(List<Order> history, Customer customer){
         if(history == null || history.isEmpty()) {
             System.out.println("No orders found in your history");
         }
         else{
-            for(Order order:history){ // to string override
-                System.out.println(order);
+            System.out.println("Your Order History:");
+
+//            for(Order order:history){ // to string override
+//                System.out.println(order);
+//            }
+
+            for(int i = 0; i < history.size(); i++){
+                Order order = history.get(i);
+                System.out.println((i+1) + ". Order ID: " + order.getOrderID() + " | Status: " + order.getStatus() + " | Total: ₹" + String.format("%.2f", order.getTotalPrice()));
             }
+            System.out.println((history.size()+1) + ". Go Back");
+            int choice = InputUtils.readInt("Select an order to re-order or go back: ", 1, history.size()+1);
+            if(choice == history.size()+1){
+                return; // Go back
+            }
+            Order selectedOrder = history.get(choice-1);
+            reOrder(selectedOrder, customer);
+
         }
+    }
+
+    private static void reOrder(Order order, Customer customer){
+        List<OrderItem> itemsToReOrder = order.getItems();
+        for(OrderItem item : itemsToReOrder){
+            customer.getCart().addItem(item.getMenuItem(), item.getQuantity());
+        }
+        System.out.println("Items from Order ID " + order.getOrderID() + " have been added to your cart.");
     }
 
     private void generateSalesReport(){
         System.out.println("Generating sales report...");
     }
 
+    // not using anymore(after implementing cart)
+//    private Order createOrder(Customer customer){
+//        List <OrderItem> orderItems = new ArrayList<>();
+//        System.out.print("Enter any special requests (or press Enter to skip): ");
+//        String specialRequest = scanner.nextLine().trim();
+//        while(true){
+//            System.out.println("Enter the name of item to add to your order (type done to finish): ");
+//            String itemName = scanner.nextLine().trim();
+//            if(itemName.equalsIgnoreCase("done")){
+//                break;
+//            }
+//            // checking if it is availabel
+//            List<MenuItem> search = menuService.searchItems(itemName);
+//            if(search.isEmpty()){
+//                System.out.println("Item not found, Please try again.");
+//                continue;
+//            }
+//            MenuItem menuItem = search.get(0); // for now, considering only one item with one name.
+//            // checking if available
+//            if (!menuItem.isAvailable()) {
+//                System.out.println("Sorry, this item is currently unavailable.");
+//                continue;
+//            }
+//            System.out.println("Enter the quantity");
+//            int quantity = readIntInput(1, 100);
+//
+//            OrderItem orderItem = new OrderItem(menuItem, quantity);
+//            orderItems.add(orderItem);
+//            System.out.println("Item added to list");
+//
+//        }
+//        if(orderItems.isEmpty()){
+//            System.out.println("No items were added to cart");
+//            return null;
+//        }
+//        Order.Priority priority;
+//        if(customer instanceof VIPCustomer){
+//            priority = Order.Priority.HIGH;
+//        }
+//        else{
+//            priority = Order.Priority.NORMAL;
+//        }
+//        return new Order(customer.getLoginID(),priority,orderItems, specialRequest);
+//    }
+
+    // new createOrder method to align with cart.
     private Order createOrder(Customer customer){
-        List <OrderItem> orderItems = new ArrayList<>();
-        System.out.print("Enter any special requests (or press Enter to skip): ");
-        String specialRequest = scanner.nextLine().trim();
-        while(true){
-            System.out.println("Enter the name of item to add to your order (type done to finish): ");
-            String itemName = scanner.nextLine().trim();
-            if(itemName.equalsIgnoreCase("done")){
-                break;
-            }
-            // checking if it is availabel
-            List<MenuItem> search = menuService.searchItems(itemName);
-            if(search.isEmpty()){
-                System.out.println("Item not found, Please try again.");
-                continue;
-            }
-            MenuItem menuItem = search.get(0); // for now, considering only one item with one name.
-            // checking if available
-            if (!menuItem.isAvailable()) {
-                System.out.println("Sorry, this item is currently unavailable.");
-                continue;
-            }
-            System.out.println("Enter the quantity");
-            int quantity = readIntInput(1, 100);
-
-            OrderItem orderItem = new OrderItem(menuItem, quantity);
-            orderItems.add(orderItem);
-            System.out.println("Item added to list");
-
-        }
-        if(orderItems.isEmpty()){
-            System.out.println("No items were added to cart");
+        Cart cart = customer.getCart();
+        if(cart.isEmpty()){
+            System.out.println("Your cart is empty. Add items before placing an order.");
             return null;
         }
-        Order.Priority priority;
-        if(customer instanceof VIPCustomer){
-            priority = Order.Priority.HIGH;
-        }
-        else{
-            priority = Order.Priority.NORMAL;
-        }
-        return new Order(customer.getLoginID(),priority,orderItems, specialRequest);
+
+        System.out.println("Enter any special requests (or press Enter to skip): ");
+        String specialRequests = scanner.nextLine().trim();
+
+        System.out.println("Enter delivery address: ");
+        String deliveryAddress = scanner.nextLine().trim();
+
+        List<OrderItem> orderItems = new ArrayList<>(cart.getItems());
+
+        Order.Priority priority = (customer instanceof VIPCustomer) ? Order.Priority.HIGH : Order.Priority.NORMAL;
+        String combinedSpecialRequest = specialRequests.isEmpty() ? "Delivery Address: " + deliveryAddress
+                : specialRequests + " | Delivery Address: " + deliveryAddress;
+
+        return new Order(customer.getLoginID(), priority, orderItems, combinedSpecialRequest);
     }
+
 
     private void provideReview(Customer customer){
         System.out.println("Enter the name of the item you want to review: ");

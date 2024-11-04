@@ -78,8 +78,8 @@ public class VIPCustomer extends Customer{
         }
 
         System.out.println("VIP Statistics:");
-        System.out.println("Total Orders Placed: ");
-        System.out.println("Total Amount Spent: ");
+        System.out.println("Total Orders Placed: "+totalOrders);
+        System.out.println("Total Amount Spent: "+totalSpent);
     }
 
 }

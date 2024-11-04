@@ -11,7 +11,7 @@ public class Admin extends User{
         this.customerService = CustomerService.getInstance();
         this.menuService = MenuServiceImpl.getInstance();
         this.orderManager = OrderManagerImpl.getInstance(); // Initialize orderManager
-        this.reportGenerator = new ReportGeneratorImpl(); // Assuming you have an implementation
+        this.reportGenerator = new ReportGeneratorImpl();
     }
 
 
@@ -40,6 +40,7 @@ public class Admin extends User{
 
     public void removeMenuItem(String itemName) {
         menuService.removeMenuItem(itemName);
+        orderManager.denyOrdersWithItem(itemName); // deny orders containing the removed item
         System.out.println("Item removed successfully.");
     }
     public void trackOrders() {
