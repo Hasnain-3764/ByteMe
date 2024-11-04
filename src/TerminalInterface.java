@@ -109,9 +109,9 @@ public class TerminalInterface {
                 }
                 // to be implemented
                 case 3 -> addItemToCart(vipCustomer);
-//                case 4 -> viewCart(vipCustomer);
-//                case 5 -> modifyCart(vipCustomer);
-//                case 6 -> checkOut(vipCustomer);
+                case 4 -> viewCart(vipCustomer);
+                case 5 -> modifyCart(vipCustomer);
+                case 6 -> checkOut(vipCustomer);
 //                case 3 -> {
 //                    Order order = createOrder(vipCustomer); // create an Order object
 //                    try {
@@ -173,9 +173,9 @@ public class TerminalInterface {
 
                 // to be implemented
                 case 3 -> addItemToCart(regularCustomer);
-//                case 4 -> viewCart(regularCustomer);
-//                case 5 -> modifyCart(regularCustomer);
-//                case 6 -> checkout(regularCustomer);
+                case 4 -> viewCart(regularCustomer);
+                case 5 -> modifyCart(regularCustomer);
+                case 6 -> checkOut(regularCustomer);
                 case 7 -> {
                     List<Order> history = customerService.getOrderHistory(regularCustomer.getLoginID());
                     displayOrderHistory(history);
@@ -234,7 +234,57 @@ public class TerminalInterface {
     }
 
     private void modifyCart(Customer customer){
+        Cart cart = customer.getCart();
+        if(cart.isEmpty()){
+            System.out.println("Your cart is empty.");
+            return;
+        }
+        System.out.println("Modify Cart: ");
 
+        System.out.println("1. Change item quantity");
+        System.out.println("2. Remove Item");
+        System.out.println("3. Go Back");
+        int choice = InputUtils.readInt("Enter your choice: ", 1,3);
+        switch (choice){
+            case 1 -> {
+                System.out.println("Enter the name of the item to modify: ");
+                String itemName = scanner.nextLine().trim();
+                System.out.println("Enter the new quantity: ");
+                int newQuantity = InputUtils.readInt("Enter the new quantity: ", 0, 100);
+                cart.modifyItemQuantity(itemName,newQuantity);
+                System.out.println("Item quantity updated.");
+            }
+            case 2 -> {
+                System.out.println("Enter the name of the item to remove: ");
+                String removeItemName = scanner.nextLine().trim();
+                cart.removeItem(removeItemName);
+
+                System.out.println("Item removed from cart..");
+            }
+            case 3 -> System.out.println("Returning to customer menu.");
+            default -> System.out.println("Invalid choice");
+        }
+    }
+
+    private void checkOut(Customer customer){
+        System.out.println("Proceeding to checkout...");
+        Cart cart = customer.getCart();
+        viewCart(customer);
+        System.out.println("Enter any special requests (or press Enter to skip): ");
+        String specialRequests = scanner.nextLine().trim();
+        System.out.println("Enter delivery address: ");
+        String deliveryAddress = scanner.nextLine().trim();
+        List<OrderItem> orderItems = new ArrayList<>(cart.getItems());
+        Order.Priority priority = (customer instanceof VIPCustomer) ? Order.Priority.HIGH : Order.Priority.NORMAL;
+        Order order = new Order(customer.getLoginID(), priority,orderItems,specialRequests + " | Delivery Address: "+deliveryAddress);
+        try{
+            customer.placeOrder(order);
+        } catch (DishNotAvailableException e){
+            System.out.println(e.getMessage());
+            return;
+        }
+        cart.clear();
+        System.out.println("Checkout successful. Your order has been placed.");
     }
 
     private void becomeVIP(RegularCustomer regularCustomer){
