@@ -31,3 +31,16 @@ and everytime i create a user during runtime, how would this work then?
     be handled after all VIP orders have been processed.
 21) Cancel order: Customers can cancel their orders before they are prepared or processed.
 22) – Order history: Customers can view their past orders and re-order previous meals if desired.
+22) fried rice != ice cream.
+23) Enter the name of item to add to your cart:
+    Enter the quantity:
+Enter the name of the item to modify:
+fried rice
+Enter the new quantity:
+Enter the new quantity:
+
+water is not premium.
+premium items should be added back to back.
+track order? how will user know his ordered is cancelled?
+removing item cancelling order but what about refund?
+// can't add pasta/ why?

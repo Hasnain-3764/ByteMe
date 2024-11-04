@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VIPCustomer extends Customer{
 
@@ -55,7 +56,11 @@ public class VIPCustomer extends Customer{
     // implmement
     public void viewExclusiveMenuItems(){
         System.out.println("VIP Exclusive Menu Items:");
-        List<MenuItem> exclusiveItems = MenuServiceImpl.getInstance().filterItemsByAvailability(true); // vip only see available priemium items.
+        List<MenuItem> exclusiveItems = MenuServiceImpl.getInstance().filterVipExclusiveItems()
+                .stream()
+                .filter(MenuItem::isAvailable)
+                .collect(Collectors.toList());
+
         if(exclusiveItems.isEmpty()){
             System.out.println("No exclusive items available.");
             return;

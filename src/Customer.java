@@ -34,7 +34,7 @@ public abstract class Customer extends User {
 //        for(Order order:history){
 //            System.out.println(order);
 //        }
-        TerminalInterface.displayOrderHistory(history); // use the display function
+        TerminalInterface.displayOrderHistory(history,this); // use the display function
 
     }
     public Cart getCart() { // Getter for Cart

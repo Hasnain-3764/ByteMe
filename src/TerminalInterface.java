@@ -429,7 +429,6 @@ public class TerminalInterface {
 
         System.out.println("Enter item price: ");
         double price = readDoubleInput(0, Double.MAX_VALUE);
-        scanner.nextLine();
 
         System.out.print("Enter item category (e.g., Snack, Beverage, Meal, Dessert): ");
         String type = scanner.nextLine().trim();
@@ -515,7 +514,7 @@ public class TerminalInterface {
             System.out.println("No orders found in your history");
         }
         else{
-            System.out.println("Your Order History:");
+            System.out.println("===== Your Order History =====");
 
 //            for(Order order:history){ // to string override
 //                System.out.println(order);
@@ -523,17 +522,37 @@ public class TerminalInterface {
 
             for(int i = 0; i < history.size(); i++){
                 Order order = history.get(i);
-                System.out.println((i+1) + ". Order ID: " + order.getOrderID() + " | Status: " + order.getStatus() + " | Total: ₹" + String.format("%.2f", order.getTotalPrice()));
+                System.out.printf("%d. Order ID: %s | Status: %s | Total: ₹%.2f | Date: %s\n",
+                        i+1, order.getOrderID(), order.getStatus(), order.getTotalPrice(),
+                        order.getOrderTime().toLocalDate());
             }
-            System.out.println((history.size()+1) + ". Go Back");
-            int choice = InputUtils.readInt("Select an order to re-order or go back: ", 1, history.size()+1);
+            System.out.println((history.size()+1) + ". Re-order a Previous Order");
+            System.out.println((history.size()+2) + ". Go Back");
+            int choice = InputUtils.readInt("Select an order to re-order or go back: ", 1, history.size()+2);
             if(choice == history.size()+1){
+                selectOrderToReOrder(history, customer);
+            }
+            else if(choice == history.size()+2){
                 return; // Go back
             }
-            Order selectedOrder = history.get(choice-1);
-            reOrder(selectedOrder, customer);
-
+            else{
+                System.out.println("Invalid choice. Returning to Order History.");
+                displayOrderHistory(history, customer);
+            }
         }
+    }
+
+    private static void selectOrderToReOrder(List<Order> history, Customer customer){
+        int orderChoice = InputUtils.readInt("Enter the number of the order to re-order or type 0 to go back: ", 0, history.size());
+        if(orderChoice == 0){
+            return;
+        }
+        if(orderChoice < 1 || orderChoice > history.size()){
+            System.out.println("Invalid choice. Returning to Order History.");
+            return;
+        }
+        Order selectedOrder = history.get(orderChoice-1);
+        reOrder(selectedOrder, customer);
     }
 
     private static void reOrder(Order order, Customer customer){
