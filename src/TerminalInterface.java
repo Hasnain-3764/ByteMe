@@ -83,18 +83,22 @@ public class TerminalInterface {
                 case 6 -> Order.OrderStatus.REFUNDED;
                 default -> Order.OrderStatus.RECEIVED; // Default
             };
-            boolean updated = OrderManagerImpl.getInstance().updateOrderStatus(orderID, newStatus);
-            if(updated){
-                break; // Exit loop upon successful update
-            }
-            else{
+
+            try {
+                OrderManagerImpl.getInstance().updateOrderStatus(orderID, newStatus);
+                System.out.println("Order status updated successfully.");
+                break; // exit loop upon successful update
+            } catch (OrderNotFoundException e) {
+                System.out.println(e.getMessage());
                 System.out.println("Would you like to try again? (yes/no)");
                 String response = scanner.nextLine().trim().toLowerCase();
-                if(!response.equals("yes") && !response.equals("y")){
+                if (!response.equals("yes") && !response.equals("y")) {
                     System.out.println("Returning to Admin Menu...");
                     break;
                 }
             }
+
+
         }
     }
 
@@ -108,15 +112,16 @@ public class TerminalInterface {
             System.out.println("4. View Cart");
             System.out.println("5. Modify Cart");
             System.out.println("6. Checkout");
-            System.out.println("7. View Order History");
-            System.out.println("8. Access VIP Benefits");
-            System.out.println("9. Provide a Review");
-            System.out.println("10. View Item Reviews");
-            System.out.println("11. Sort Menu Items by Price");
-            System.out.println("12. Filter Menu Items by Category");
-            System.out.println("13. Logout");
+            System.out.println("7. Cancel an Order");
+            System.out.println("8. View Order History");
+            System.out.println("9. Access VIP Benefits");
+            System.out.println("10. Provide a Review");
+            System.out.println("11. View Item Reviews");
+            System.out.println("12. Sort Menu Items by Price");
+            System.out.println("13. Filter Menu Items by Category");
+            System.out.println("14. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 13);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 14);
 
             switch(choice){
                 case 1 ->  customerService.browseMenu(); // to be implemented
@@ -138,17 +143,19 @@ public class TerminalInterface {
 //                        System.out.println(e.getMessage());
 //                    }
 //                }
-                case 7 -> {
+                case 7 -> cancelOrder(vipCustomer);
+
+                case 8 -> {
                     List<Order> history = customerService.getOrderHistory(vipCustomer.getLoginID());
                     displayOrderHistory(history, vipCustomer);
                 }
 //                case 4 -> vipCustomer.viewOrderHistory();
-                case 8 -> vipCustomer.accessVIPBenefits();
-                case 9 -> provideReview(vipCustomer);
-                case 10 -> viewItemReviews();
-                case 11 -> sortMenuItems(vipCustomer);
-                case 12 -> filterMenuItems(vipCustomer);
-                case 13 -> {
+                case 9 -> vipCustomer.accessVIPBenefits();
+                case 10 -> provideReview(vipCustomer);
+                case 11 -> viewItemReviews();
+                case 12 -> sortMenuItems(vipCustomer);
+                case 13 -> filterMenuItems(vipCustomer);
+                case 14 -> {
                     System.out.println("Logging out...");
                     return;
                 }
@@ -166,16 +173,17 @@ public class TerminalInterface {
             System.out.println("4. View Cart");
             System.out.println("5. Modify Cart");
             System.out.println("6. Checkout");
-            System.out.println("7. View Order History");
-            System.out.println("8. Become a VIP");
-            System.out.println("9. Access Regular Benefits");
-            System.out.println("10. Provide a Review");
-            System.out.println("11. View Item Reviews");
-            System.out.println("11. Sort Menu Items by Price");
-            System.out.println("12. Filter Menu Items by Category");
-            System.out.println("14. Logout");
+            System.out.println("7. Cancel an Order");
+            System.out.println("8. View Order History");
+            System.out.println("9. Become a VIP");
+            System.out.println("10. Access Regular Benefits");
+            System.out.println("11. Provide a Review");
+            System.out.println("12. View Item Reviews");
+            System.out.println("13. Sort Menu Items by Price");
+            System.out.println("14. Filter Menu Items by Category");
+            System.out.println("15. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 9);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 15);
 
             switch (choice) {
                 case 1 -> regularCustomer.browseMenu(); // to be implemented
@@ -198,18 +206,19 @@ public class TerminalInterface {
                 case 4 -> viewCart(regularCustomer);
                 case 5 -> modifyCart(regularCustomer);
                 case 6 -> checkOut(regularCustomer);
-                case 7 -> {
+                case 7 -> cancelOrder(regularCustomer);
+                case 8 -> {
                     List<Order> history = customerService.getOrderHistory(regularCustomer.getLoginID());
                     displayOrderHistory(history, regularCustomer);
                 }
 //                case 4 -> regularCustomer.viewOrderHistory();
-                case 8 -> becomeVIP(regularCustomer); // special priveledge for our vips
-                case 9-> regularCustomer.accessRegularBenefits();
-                case 10 -> provideReview(regularCustomer); // to be implemented
-                case 11 -> viewItemReviews(); // to be implemented
-                case 12 -> sortMenuItems(regularCustomer);
-                case 13 -> filterMenuItems(regularCustomer);
-                case 14 -> {
+                case 9 -> becomeVIP(regularCustomer); // special priveledge for our vips
+                case 10-> regularCustomer.accessRegularBenefits();
+                case 11 -> provideReview(regularCustomer); // to be implemented
+                case 12-> viewItemReviews(); // to be implemented
+                case 13 -> sortMenuItems(regularCustomer);
+                case 14 -> filterMenuItems(regularCustomer);
+                case 15 -> {
                     System.out.println("Logging out...");
                     return; //exit to main menu
                 }
@@ -260,6 +269,18 @@ public class TerminalInterface {
                         item.getName(), item.getPrice(), item.getType(),
                         item.isAvailable() ? "Available" : "Unavailable");
             }
+        }
+    }
+
+    private void cancelOrder(Customer customer){
+        System.out.print("Enter Order ID to cancel: ");
+        String orderID = scanner.nextLine().trim();
+        boolean canceled = OrderManagerImpl.getInstance().cancelOrder(orderID, customer.getLoginID());
+        if(canceled){
+            System.out.println("Your order has been canceled successfully.");
+        }
+        else{
+            System.out.println("Unable to cancel the order. It may have already been processed.");
         }
     }
 

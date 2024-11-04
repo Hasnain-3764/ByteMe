@@ -55,15 +55,27 @@ public class VIPCustomer extends Customer{
     // implmement
     public void viewExclusiveMenuItems(){
         System.out.println("VIP Exclusive Menu Items:");
-        List<MenuItem> exclusiveItems = MenuServiceImpl.getInstance().filterVipExclusiveItems();
+        List<MenuItem> exclusiveItems = MenuServiceImpl.getInstance().filterItemsByAvailability(true); // vip only see available priemium items.
         if(exclusiveItems.isEmpty()){
             System.out.println("No exclusive items available.");
             return;
         }
-        for(MenuItem item: exclusiveItems){
-            System.out.printf("Name: %s | Price: ₹%.2f | Type: %s\n",
-                    item.getName(), item.getPrice(), item.getType());
+        for(int i=0; i < exclusiveItems.size(); i++){
+            MenuItem item = exclusiveItems.get(i);
+            System.out.printf("%d. Name: %s | Price: ₹%.2f | Type: %s\n",
+                    i+1, item.getName(), item.getPrice(), item.getType());
         }
+        System.out.println((exclusiveItems.size()+1) + ". Go Back");
+        // allowing vip to order from special menu
+        int choice = InputUtils.readInt("Select an item to add to cart: ", 1, exclusiveItems.size()+1);
+        if(choice == exclusiveItems.size()+1){
+            System.out.println("Returning to VIP Menu...");
+            return;
+        }
+        MenuItem selectedItem = exclusiveItems.get(choice -1);
+        int quantity = InputUtils.readInt("Enter quantity: ", 1, 100);
+        this.getCart().addItem(selectedItem, quantity);
+        System.out.println(selectedItem.getName() + " added to cart successfully.");
     }
     //implement
     public void applyVIPDiscount(){
@@ -76,10 +88,12 @@ public class VIPCustomer extends Customer{
         for(Order order : history){
             totalSpent += order.getTotalPrice();
         }
-
+        System.out.println("===== VIP Statistics =====");
         System.out.println("VIP Statistics:");
         System.out.println("Total Orders Placed: "+totalOrders);
         System.out.println("Total Amount Spent: "+totalSpent);
+        System.out.println("==========================");
+
     }
 
 }

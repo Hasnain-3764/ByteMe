@@ -8,7 +8,7 @@ public class OrderManagerImpl implements OrderManager {
 
     private OrderManagerImpl() {
         Comparator<Order> orderComparator = Comparator
-                .comparing(Order::getPriority)
+                .comparing(Order::getPriority, Comparator.reverseOrder()) // HIGH before NORMAL
                 .thenComparing(Order::getOrderTime);
         pendingOrders = new PriorityQueue<>(orderComparator);
         orderHistories = new HashMap<>();
@@ -32,6 +32,28 @@ public class OrderManagerImpl implements OrderManager {
             System.out.println("Order placed successfully and added to pending orders.");
         }
     }
+
+    public boolean cancelOrder(String orderID, String customerID){
+        // find the order in pendingOrders
+        Order targetOrder = null;
+        for(Order order : pendingOrders){
+            if(order.getOrderID().equals(orderID) && order.getCustomerID().equals(customerID)){
+                targetOrder = order;
+                break;
+            }
+        }
+        if(targetOrder != null){
+            pendingOrders.remove(targetOrder);
+            targetOrder.setStatus(Order.OrderStatus.CANCELED);
+            System.out.println("Order cancelled successfully.");
+            return true;
+        }
+        else{
+            System.out.println("Order not found or cannot be canceled.");
+            return false;
+        }
+    }
+
 
     private void addToOrderHistory(Order order){
         orderHistories.putIfAbsent(order.getCustomerID(), new ArrayList<>());
@@ -57,7 +79,7 @@ public class OrderManagerImpl implements OrderManager {
 
     // similar implementation like processRefund
     @Override
-    public void updateOrderStatus(String orderID, Order.OrderStatus newStatus){
+    public void updateOrderStatus(String orderID, Order.OrderStatus newStatus) throws OrderNotFoundException {
         Order targetOrder = null; // uninitialised.
         for(Order order:pendingOrders){
             if(order.getOrderID().equals(orderID)){
@@ -72,10 +94,9 @@ public class OrderManagerImpl implements OrderManager {
                 pendingOrders.offer(targetOrder);
             }
             System.out.println("Order status updated: \n" + targetOrder);
-
         }
         else{
-            System.out.println("OrderID not found in the pending orders.");
+            throw new OrderNotFoundException("OrderID " + orderID + " not found in pending orders.");
         }
     }
 
