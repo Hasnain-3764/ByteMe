@@ -67,9 +67,17 @@ public class MenuServiceImpl implements MenuService{
     @Override
     public List<MenuItem> searchItems(String keyword) {
         List<MenuItem> results = new ArrayList<>();
+        String lowerKeyword = keyword.toLowerCase().trim();
+        if(lowerKeyword.isEmpty()){
+            return results;
+        }
         for(MenuItem item: menuItems){
-            if(item.getName().toLowerCase().contains(keyword.toLowerCase())){
-                results.add(item);
+            String[] words = item.getName().toLowerCase().split("\\s+");
+            for(String word : words){
+                if(word.equals(lowerKeyword)){
+                    results.add(item);
+                    break;
+                }
             }
         }
         return results;

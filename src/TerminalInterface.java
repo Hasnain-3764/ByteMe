@@ -2,6 +2,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class TerminalInterface {
@@ -119,7 +120,8 @@ public class TerminalInterface {
             System.out.println("11. View Item Reviews");
             System.out.println("12. Sort Menu Items by Price");
             System.out.println("13. Filter Menu Items by Category");
-            System.out.println("14. Logout");
+            System.out.println("16. View Pending Orders");
+            System.out.println("15. Logout");
 
             int choice = InputUtils.readInt("Enter your choice: ", 1, 14);
 
@@ -155,7 +157,8 @@ public class TerminalInterface {
                 case 11 -> viewItemReviews();
                 case 12 -> sortMenuItems(vipCustomer);
                 case 13 -> filterMenuItems(vipCustomer);
-                case 14 -> {
+                case 14 -> viewPendingOrders(vipCustomer);
+                case 15 -> {
                     System.out.println("Logging out...");
                     return;
                 }
@@ -181,7 +184,8 @@ public class TerminalInterface {
             System.out.println("12. View Item Reviews");
             System.out.println("13. Sort Menu Items by Price");
             System.out.println("14. Filter Menu Items by Category");
-            System.out.println("15. Logout");
+            System.out.println("15. View Pending Orders"); // New Option
+            System.out.println("16. Logout");
 
             int choice = InputUtils.readInt("Enter your choice: ", 1, 15);
 
@@ -218,7 +222,8 @@ public class TerminalInterface {
                 case 12-> viewItemReviews(); // to be implemented
                 case 13 -> sortMenuItems(regularCustomer);
                 case 14 -> filterMenuItems(regularCustomer);
-                case 15 -> {
+                case 15 -> viewPendingOrders(regularCustomer);
+                case 16 -> {
                     System.out.println("Logging out...");
                     return; //exit to main menu
                 }
@@ -233,6 +238,44 @@ public class TerminalInterface {
 //        // For brevity, assume we return a new Order object
 //        return
 //    }
+
+    private void viewPendingOrders(Customer customer){
+        List<Order> history = customerService.getOrderHistory(customer.getLoginID());
+        List<Order> pending = history.stream()
+                .filter(order -> order.getStatus() != Order.OrderStatus.DELIVERED &&
+                        order.getStatus() != Order.OrderStatus.DENIED &&
+                        order.getStatus() != Order.OrderStatus.CANCELED &&
+                        order.getStatus() != Order.OrderStatus.REFUNDED)
+                .collect(Collectors.toList());
+
+        if(pending.isEmpty()){
+            System.out.println("You have no pending orders.");
+            return;
+        }
+
+        System.out.println("===== Your Pending Orders =====");
+        for(int i = 0; i < pending.size(); i++){
+            Order order = pending.get(i);
+            System.out.printf("%d. Order ID: %s | Status: %s | Total: ₹%.2f | Date: %s\n",
+                    i+1, order.getOrderID(), order.getStatus(), order.getTotalPrice(),
+                    order.getOrderTime().toLocalDate());
+        }
+        System.out.println((pending.size()+1) + ". Go Back");
+
+        int choice = InputUtils.readInt("Select an order to view details or go back: ", 1, pending.size()+1);
+        if(choice == pending.size()+1){
+            return; // Go back
+        }
+        Order selectedOrder = pending.get(choice-1);
+        displayOrderDetails(selectedOrder);
+    }
+
+    private void displayOrderDetails(Order order){
+        System.out.println("\n===== Order Details =====");
+        System.out.println(order);
+        System.out.println("=========================\n");
+    }
+
 
     private void sortMenuItems(Customer customer){
         System.out.println("Sort Menu Items By Price:");
