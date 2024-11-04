@@ -59,29 +59,45 @@ public class TerminalInterface {
     }
 
     private void adminUpdateOrderStatus(Admin admin){
-        System.out.println("Enter Order ID to update: ");
-        String orderID = scanner.nextLine().trim();
-        System.out.println("Choose new status: ");
-        System.out.println("1. RECIEVED");
-        System.out.println("2. PREPARING");
-        System.out.println("3. OUT_FOR_DELIVERY");
-        System.out.println("4. DELIVERED");
-        System.out.println("5. CANCELED");
-        System.out.println("6. REFUNDED");
-        int choice = InputUtils.readInt("Enter your choice: ", 1, 6);
-        Order.OrderStatus newStatus = switch(choice){
-
-            case 1 -> Order.OrderStatus.RECEIVED;
-            case 2 -> Order.OrderStatus.PREPARING;
-            case 3 -> Order.OrderStatus.OUT_FOR_DELIVERY;
-            case 4 -> Order.OrderStatus.DELIVERED;
-            case 5 -> Order.OrderStatus.CANCELED;
-            case 6 -> Order.OrderStatus.REFUNDED;
-            default -> Order.OrderStatus.RECEIVED; // Default
-        };
-        OrderManagerImpl.getInstance().updateOrderStatus(orderID, newStatus);
-
+        while(true){
+            System.out.println("Enter Order ID to update (or type 'back' to return): ");
+            String orderID = scanner.nextLine().trim();
+            if(orderID.equalsIgnoreCase("back")){
+                System.out.println("Returning to Admin Menu...");
+                return;
+            }
+            System.out.println("Choose new status: ");
+            System.out.println("1. RECEIVED");
+            System.out.println("2. PREPARING");
+            System.out.println("3. OUT_FOR_DELIVERY");
+            System.out.println("4. DELIVERED");
+            System.out.println("5. CANCELED");
+            System.out.println("6. REFUNDED");
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 6);
+            Order.OrderStatus newStatus = switch(choice){
+                case 1 -> Order.OrderStatus.RECEIVED;
+                case 2 -> Order.OrderStatus.PREPARING;
+                case 3 -> Order.OrderStatus.OUT_FOR_DELIVERY;
+                case 4 -> Order.OrderStatus.DELIVERED;
+                case 5 -> Order.OrderStatus.CANCELED;
+                case 6 -> Order.OrderStatus.REFUNDED;
+                default -> Order.OrderStatus.RECEIVED; // Default
+            };
+            boolean updated = OrderManagerImpl.getInstance().updateOrderStatus(orderID, newStatus);
+            if(updated){
+                break; // Exit loop upon successful update
+            }
+            else{
+                System.out.println("Would you like to try again? (yes/no)");
+                String response = scanner.nextLine().trim().toLowerCase();
+                if(!response.equals("yes") && !response.equals("y")){
+                    System.out.println("Returning to Admin Menu...");
+                    break;
+                }
+            }
+        }
     }
+
 
     public void showVIPCustomerMenu(VIPCustomer vipCustomer){
         while(true){
@@ -124,7 +140,7 @@ public class TerminalInterface {
 //                }
                 case 7 -> {
                     List<Order> history = customerService.getOrderHistory(vipCustomer.getLoginID());
-                    displayOrderHistory(history);
+                    displayOrderHistory(history, vipCustomer);
                 }
 //                case 4 -> vipCustomer.viewOrderHistory();
                 case 8 -> vipCustomer.accessVIPBenefits();
@@ -184,7 +200,7 @@ public class TerminalInterface {
                 case 6 -> checkOut(regularCustomer);
                 case 7 -> {
                     List<Order> history = customerService.getOrderHistory(regularCustomer.getLoginID());
-                    displayOrderHistory(history);
+                    displayOrderHistory(history, regularCustomer);
                 }
 //                case 4 -> regularCustomer.viewOrderHistory();
                 case 8 -> becomeVIP(regularCustomer); // special priveledge for our vips
@@ -329,15 +345,38 @@ public class TerminalInterface {
         Order.Priority priority = (customer instanceof VIPCustomer) ? Order.Priority.HIGH : Order.Priority.NORMAL;
         Order order = new Order(customer.getLoginID(), priority,orderItems,specialRequests + " | Delivery Address: "+deliveryAddress);
 
-        try {
-            customer.placeOrder(order);
-            cart.clear();
-            System.out.println("Checkout successful. Your order has been placed.");
-            displayReceipt(order);
-        } catch (DishNotAvailableException e) {
-            System.out.println(e.getMessage());
-        }
+        customer.placeOrder(order);
+        cart.clear();
+        System.out.println("Checkout successful. Your order has been placed.");
+        displayReceipt(order);
     }
+
+    private void displayReceipt(Order order){
+        System.out.println("\n===== Receipt =====");
+        System.out.println("Order ID: " + order.getOrderID());
+        System.out.println("Order Time: " + order.getOrderTime());
+        System.out.println("Status: " + order.getStatus());
+        System.out.println("Special Requests: " + order.getSpecialRequest());
+        System.out.println("\nItems:");
+        for(OrderItem item : order.getItems()){
+            System.out.printf("%s x%d = ₹%.2f\n",
+                    item.getMenuItem().getName(),
+                    item.getQuantity(),
+                    item.getTotalPrice());
+        }
+        double subtotal = 0;
+        for(OrderItem item : order.getItems()){
+            subtotal += item.getTotalPrice();
+        }
+        System.out.printf("Subtotal: ₹%.2f\n", subtotal);
+        if(order.getPriority() == Order.Priority.HIGH){
+            double discount = subtotal * 0.10;
+            System.out.printf("VIP Discount (10%%): -₹%.2f\n", discount);
+        }
+        System.out.printf("Total: ₹%.2f\n", order.getTotalPrice());
+        System.out.println("===================\n");
+    }
+
 
     private void becomeVIP(RegularCustomer regularCustomer){
         System.out.println("To become a VIP, there is one-time upgrade fee of ₹1000.");
@@ -354,7 +393,8 @@ public class TerminalInterface {
             authenticator.upgradeToVIP(vipCustomer);
 //            showVIPCustomerMenu(vipCustomer);
             System.out.println("Congratulations! You are now a VIP customer.");
-            System.out.println("Please log out and log back in as VIP.");
+            System.out.println("Logging out automatically. Please log in again as VIP.");
+            return;
         }
         else{
             System.out.println("Upgrade to VIP cancelled");
