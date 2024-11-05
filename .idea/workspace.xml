@@ -4,53 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7bc7820-c5a0-4cc0-8752-b657a62fc64f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ReadMe.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AuthenticationManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AuthenticationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/AuthenticationManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Cart.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Customer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CustomerService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CustomerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CustomerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataInitializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DishNotAvailableException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DisplayUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/InputUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/InvalidLoginException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MenuItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MenuItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MenuItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MenuService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MenuServiceImpl$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MenuServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MenuServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MenuServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Order$OrderStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Order$Priority.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Order.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OrderItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OrderManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OrderManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OrderManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OrderManagerImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OrderManagerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OrderManagerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OrderNotFoundException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RegularCustomer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RegularCustomer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RegularCustomer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReportGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReportGeneratorImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReportGeneratorImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReportGeneratorImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Review.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TerminalInterface.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TerminalInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TerminalInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VIPCustomer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/VIPCustomer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VIPCustomer.java" afterDir="false" />
-    </list>
+    <list default="true" id="a7bc7820-c5a0-4cc0-8752-b657a62fc64f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
