@@ -120,7 +120,7 @@ public class TerminalInterface {
             System.out.println("11. View Item Reviews");
             System.out.println("12. Sort Menu Items by Price");
             System.out.println("13. Filter Menu Items by Category");
-            System.out.println("16. View Pending Orders");
+            System.out.println("14. View Pending Orders");
             System.out.println("15. Logout");
 
             int choice = InputUtils.readInt("Enter your choice: ", 1, 14);
@@ -329,22 +329,48 @@ public class TerminalInterface {
 
 
     private void addItemToCart(Customer customer){
-        System.out.println("Enter the name of item to add to your cart: ");
+        System.out.println("Enter the name of the item to add to your cart: ");
         String itemName = scanner.nextLine().trim();
-        List<MenuItem> search = menuService.searchItems(itemName);
-        if(search.isEmpty()){
-            System.out.println("Item not found. Please try again.");
+        List<MenuItem> searchResults = menuService.searchItems(itemName);
+        if(searchResults.isEmpty()){
+            System.out.println("No items found matching \"" + itemName + "\". Please try again.");
             return;
         }
-        MenuItem menuItem = search.get(0); // assuming single item with one name
-        if(!menuItem.isAvailable()){
-            System.out.println("Item is not available. Can't add to cart.");
-            return;
+        else if(searchResults.size() > 1){
+            System.out.println("Multiple items found:");
+            for(int i = 0; i < searchResults.size(); i++){
+                MenuItem item = searchResults.get(i);
+                System.out.printf("%d. Name: %s | Price: ₹%.2f | Type: %s | Availability: %s\n",
+                        i+1, item.getName(), item.getPrice(), item.getType(),
+                        item.isAvailable() ? "Available" : "Unavailable");
+            }
+            System.out.println((searchResults.size()+1) + ". Cancel");
+            int choice = InputUtils.readInt("Select the item number to add to cart or cancel: ", 1, searchResults.size()+1);
+            if(choice == searchResults.size()+1){
+                System.out.println("Add to cart canceled.");
+                return;
+            }
+            MenuItem selectedItem = searchResults.get(choice-1);
+            if(!selectedItem.isAvailable()){
+                System.out.println("Selected item is not available. Can't add to cart.");
+                return;
+            }
+            int quantity = InputUtils.readInt("Enter the quantity: ", 1, 100);
+            customer.getCart().addItem(selectedItem, quantity);
+            System.out.println(selectedItem.getName() + " added to cart successfully.");
         }
-        int quantity = InputUtils.readInt("Enter the quantity: ", 1, 100);
-        customer.getCart().addItem(menuItem,quantity);
-        System.out.println("Item added to cart successfully");
+        else{
+            MenuItem menuItem = searchResults.get(0);
+            if(!menuItem.isAvailable()){
+                System.out.println("Item is not available. Can't add to cart.");
+                return;
+            }
+            int quantity = InputUtils.readInt("Enter the quantity: ", 1, 100);
+            customer.getCart().addItem(menuItem, quantity);
+            System.out.println(menuItem.getName() + " added to cart successfully.");
+        }
     }
+
 
     private void viewCart(Customer customer){
         Cart cart = customer.getCart(); // every customer has a unique cart
@@ -606,9 +632,6 @@ public class TerminalInterface {
         System.out.println("Items from Order ID " + order.getOrderID() + " have been added to your cart.");
     }
 
-    private void generateSalesReport(){
-        System.out.println("Generating sales report...");
-    }
 
     // not using anymore(after implementing cart)
 //    private Order createOrder(Customer customer){

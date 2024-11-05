@@ -54,7 +54,6 @@ public class Admin extends User{
         System.out.println("Generating Daily Sales Report...");
 
         reportGenerator.generateDailySalesReport();
-        System.out.println("Generating Daily Sales Report...");
 
     }
 

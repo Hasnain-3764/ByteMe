@@ -25,48 +25,54 @@ public class Main {
             }
         }
     }
-    private static void handleLogin(){
+    private static void handleLogin() {
+        while (true) {
+            System.out.println("Login as: ");
+            System.out.println("1. Admin login");
+            System.out.println("2. VIP login");
+            System.out.println("3. Regular login");
+            System.out.println("4. <-- Go Back");
 
-        System.out.println("Login as: ");
-        System.out.println("1. Admin login");
-        System.out.println("2. VIP login");
-        System.out.println("3. Regular login");
-        System.out.println("4. <-- Go Back");
-
-        int choice = InputUtils.readInt("Enter your choice: ", 1, 4);
-        if (choice == 4) {
-            System.out.println("Returning to main menu...");
-            return;
-        }
-
-        switch(choice){
-            case 1 -> adminLogin(); // for printing only. the logic is same for all users
-            case 2 -> vipLogin();
-            case 3 -> regularLogin();
-            default -> System.out.println("Invalid choice, please try again.");
-        }
-
-        String id = scanner.next();
-        System.out.println("Enter password: ");
-        String password = scanner.next();
-
-        try{
-            User user = authenticator.login(id,password);
-            if(user instanceof Admin){
-                System.out.println("\nLogin Successful");
-                terminalInterface.showAdminMenu((Admin) user);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 4);
+            if (choice == 4) {
+                System.out.println("Returning to main menu...");
+                return;
             }
-            else if(user instanceof VIPCustomer){
-                System.out.println("\nLogin Successful");
-                terminalInterface.showVIPCustomerMenu((VIPCustomer) user);
+
+            switch (choice) {
+                case 1 -> adminLogin(); // for printing only. the logic is same for all users
+                case 2 -> vipLogin();
+                case 3 -> regularLogin();
+                default -> System.out.println("Invalid choice, please try again.");
             }
-            else if(user instanceof RegularCustomer){
-                System.out.println("\nLogin Successful");
-                terminalInterface.showRegularCustomerMenu((RegularCustomer) user);
+
+            String id = scanner.next();
+            System.out.println("Enter password: ");
+            String password = scanner.next();
+
+            try {
+                User user = authenticator.login(id, password);
+                if (user instanceof Admin) {
+                    System.out.println("\nLogin Successful");
+                    terminalInterface.showAdminMenu((Admin) user);
+                } else if (user instanceof VIPCustomer) {
+                    System.out.println("\nLogin Successful");
+                    terminalInterface.showVIPCustomerMenu((VIPCustomer) user);
+                } else if (user instanceof RegularCustomer) {
+                    System.out.println("\nLogin Successful");
+                    terminalInterface.showRegularCustomerMenu((RegularCustomer) user);
+                }
+                break;
+            } catch (InvalidLoginException e) {
+                System.out.println(e.getMessage());
+                System.out.println("Would you like to try again? (yes/no)");
+                String response = scanner.next().trim().toLowerCase();
+                scanner.nextLine();
+                if (!response.equals("yes") && !response.equals("y")) {
+                    System.out.println("Returning to main menu...");
+                    return;
+                }
             }
-        } catch(InvalidLoginException e){
-            System.out.println(e.getMessage());
-            handleLogin(); // recursively calling
         }
     }
     private static void regularLogin(){
