@@ -76,6 +76,15 @@ The following issues were encountered during development, along with their curre
 7. **Customer Functionalities**
     - VIP and Regular customers can browse the menu, add items to their cart, place orders, and more.
 
+## References
+
+- Oracle Java Documentation: Referenced for Java Collections framework, OOP principles, and general Java language features. Oracle Java Documentation
+
+- Stack Overflow: Used for troubleshooting and understanding common issues while implementing features like authentication and order management. Stack Overflow
+
+- GeeksforGeeks: Referenced for examples on implementing Singleton and Factory patterns, used in MenuService, CustomerService, and AuthenticationManager from GeeksforGeeks Java Examples
+
+- Java programming by OSOP Coding: Followed best practices in designing classes, implementing Singleton patterns, and object management.
 
 ## Contact
 For any questions or support, please contact the project author at [hasnain23325@iiitd.ac.in]().
