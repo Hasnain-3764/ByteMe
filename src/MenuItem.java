@@ -27,9 +27,9 @@ public class MenuItem {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public double getPrice() {
         return price;
@@ -59,6 +59,10 @@ public class MenuItem {
 
     public void addReview(Review review){
         reviews.add(review);
+    }
+
+    void setVipExclusive(boolean vipExclusive) {
+        this.vipExclusive = vipExclusive;
     }
 
     public List<Review> getReviews(){

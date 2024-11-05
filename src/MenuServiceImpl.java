@@ -1,5 +1,6 @@
 import javax.xml.crypto.Data;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class MenuServiceImpl implements MenuService{
@@ -27,17 +28,18 @@ public class MenuServiceImpl implements MenuService{
         //checking for duplicates
         for (MenuItem menuItem : menuItems){
             if (menuItem.getName().equalsIgnoreCase(item.getName())){
-                System.out.println("Error: Menu item '" + item.getName() + "' already exists.");
+                DisplayUtils.printFailure("Error: Menu item '" + item.getName() + "' already exists.");
                 return false; // Indicate failure to add due to duplication
             }
         }
         menuItems.add(item);
-        System.out.println("Menu item '" + item.getName() + "' added successfully.");
+        DisplayUtils.printSuccess("Menu item '" + item.getName() + "' added successfully.");
         return true; // Indicate successful addition
     }
 
     @Override
     public boolean updateMenuItem(MenuItem updatedItem) {
+
         for (int i = 0; i < menuItems.size(); i++) {
             if (menuItems.get(i).getName().equals(updatedItem.getName())) {
                 menuItems.set(i, updatedItem); // Update the item in-place
@@ -51,10 +53,10 @@ public class MenuServiceImpl implements MenuService{
     public void removeMenuItem(String itemName) {
         boolean removed = menuItems.removeIf(item -> item.getName().equalsIgnoreCase(itemName));
         if(removed){
-            System.out.println("Menu item '" + itemName + "' removed successfully.");
+            DisplayUtils.printSuccess("Menu item '" + itemName + "' removed successfully.");
         }
         else{
-            System.out.println("Menu item '" + itemName + "' not found.");
+            DisplayUtils.printFailure("Menu item '" + itemName + "' not found.");
         }
     }
 
@@ -66,21 +68,13 @@ public class MenuServiceImpl implements MenuService{
 
     @Override
     public List<MenuItem> searchItems(String keyword) {
-        List<MenuItem> results = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase().trim();
         if(lowerKeyword.isEmpty()){
-            return results;
+            return new ArrayList<>();
         }
-        for(MenuItem item: menuItems){
-            String[] words = item.getName().toLowerCase().split("\\s+");
-            for(String word : words){
-                if(word.equals(lowerKeyword)){
-                    results.add(item);
-                    break;
-                }
-            }
-        }
-        return results;
+        return menuItems.stream()
+                .filter(item -> item.getName().toLowerCase().contains(lowerKeyword))
+                .collect(Collectors.toList());
     }
 
     @Override

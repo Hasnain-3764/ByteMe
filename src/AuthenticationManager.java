@@ -1,7 +1,4 @@
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.HashMap;
+import java.util.*;
 
 public class AuthenticationManager {
     private Map<String, User> userMap;
@@ -36,22 +33,32 @@ public class AuthenticationManager {
 
     // Signup method
     public void signup(User user) {
+        if (user instanceof Admin) {
+            DisplayUtils.printFailure("Admin signup is restricted.");
+            return;
+        }
         if (userMap.containsKey(user.getLoginID())) {
-            System.out.println("User already exists.");
+            DisplayUtils.printFailure("User already exists.");
         } else {
             userMap.put(user.getLoginID(), user);
-            System.out.println("Signup successful!");
+            DisplayUtils.printSuccess("Signup successful!");
         }
     }
+
+
 
     public void upgradeToVIP(VIPCustomer vipCustomer){
         String loginID = vipCustomer.getLoginID();
         if(userMap.containsKey(loginID)){
             userMap.put(loginID,vipCustomer);
-            System.out.println("User upgraded to VIP successfully.");
+            DisplayUtils.printSuccess("User upgraded to VIP successfully.");
         }
         else{
-            System.out.println("User not found for upgrade.");
+            DisplayUtils.printFailure("User not found for upgrade.");
         }
+    }
+
+    public List<User> getAllUsers(){
+        return new ArrayList<>(userMap.values());
     }
 }

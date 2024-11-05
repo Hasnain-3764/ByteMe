@@ -5,6 +5,7 @@ public class OrderManagerImpl implements OrderManager {
 
     private final PriorityQueue<Order> pendingOrders;
     protected Map<String, List<Order>> orderHistories; // as we want it in other classes too
+    private int nextOrderID;
 
     private OrderManagerImpl() {
         Comparator<Order> orderComparator = Comparator
@@ -12,6 +13,8 @@ public class OrderManagerImpl implements OrderManager {
                 .thenComparing(Order::getOrderTime);
         pendingOrders = new PriorityQueue<>(orderComparator);
         orderHistories = new HashMap<>();
+        nextOrderID = 1; // initialize nextOrderID to 1
+
     }
 
     public static OrderManagerImpl getInstance(){
@@ -27,17 +30,18 @@ public class OrderManagerImpl implements OrderManager {
             if (isVIP) {
 //                order.setPriority(Order.Priority.HIGH);
             }
+            order.setOrderID(nextOrderID++);
             pendingOrders.offer(order);
             addToOrderHistory(order);
-            DisplayUtils.printSuccess("Order placed successfully and added to pending orders.");
+            DisplayUtils.printSuccess("Order recieved by Admins.");
         }
     }
 
-    public boolean cancelOrder(String orderID, String customerID){
+    public boolean cancelOrder(int orderID, String customerID){
         // find the order in pendingOrders
         Order targetOrder = null;
         for(Order order : pendingOrders){
-            if(order.getOrderID().equals(orderID) && order.getCustomerID().equals(customerID)){
+            if(order.getOrderID()==(orderID) && order.getCustomerID().equals(customerID)){
                 targetOrder = order;
                 break;
             }
@@ -77,7 +81,7 @@ public class OrderManagerImpl implements OrderManager {
             System.out.println("No pending orders.");
             return;
         }
-        System.out.println("Pending Orders:");
+        DisplayUtils.printHeading("Pending Orders:");
         for(Order order : pendingOrders){
             System.out.println(order);
         }
@@ -85,15 +89,19 @@ public class OrderManagerImpl implements OrderManager {
 
     // similar implementation like processRefund
     @Override
-    public void updateOrderStatus(String orderID, Order.OrderStatus newStatus) throws OrderNotFoundException {
+    public void updateOrderStatus(int orderID, Order.OrderStatus newStatus) throws OrderNotFoundException {
         Order targetOrder = null; // uninitialised.
         for(Order order:pendingOrders){
-            if(order.getOrderID().equals(orderID)){
+            if(order.getOrderID() == (orderID)){
                 targetOrder = order;
                 break;
             }
         }
         if(targetOrder != null){
+            if(!isValidStatusTransition(targetOrder.getStatus(), newStatus)){
+                DisplayUtils.printFailure("Invalid status transition from " + targetOrder.getStatus() + " to " + newStatus);
+                return;
+            }
             pendingOrders.remove(targetOrder);
             targetOrder.setStatus(newStatus);
             if(newStatus != Order.OrderStatus.DELIVERED && newStatus!= Order.OrderStatus.DENIED && newStatus != Order.OrderStatus.REFUNDED){
@@ -107,12 +115,25 @@ public class OrderManagerImpl implements OrderManager {
         }
     }
 
+    private boolean isValidStatusTransition(Order.OrderStatus currentStatus, Order.OrderStatus newStatus){
+        switch(currentStatus){
+            case RECEIVED:
+                return newStatus == Order.OrderStatus.PREPARING || newStatus == Order.OrderStatus.CANCELED;
+            case PREPARING:
+                return newStatus == Order.OrderStatus.OUT_FOR_DELIVERY || newStatus == Order.OrderStatus.CANCELED;
+            case OUT_FOR_DELIVERY:
+                return newStatus == Order.OrderStatus.DELIVERED || newStatus == Order.OrderStatus.REFUNDED;
+            default:
+                return false;
+        }
+    }
+
     @Override// basically setting statuses
-    public void processRefund(String orderID){
+    public void processRefund(int orderID){
         Order order = null; // uninitialised. to be found from history
         for(List<Order> orders : orderHistories.values()){
             for(Order order1: orders){
-                if(order1.getOrderID().equals(orderID)) {
+                if(order1.getOrderID()==(orderID)) {
                     order = order1;
                     break;
                 }
@@ -122,6 +143,12 @@ public class OrderManagerImpl implements OrderManager {
             }
         }
         if(order!=null){
+            if(order.getStatus() == Order.OrderStatus.DELIVERED ||
+                    order.getStatus() == Order.OrderStatus.CANCELED ||
+                    order.getStatus() == Order.OrderStatus.REFUNDED){
+                DisplayUtils.printFailure("Order cannot be refunded as it is already " + order.getStatus());
+                return;
+            }
             order.setStatus(Order.OrderStatus.REFUNDED);
             pendingOrders.remove(order);
             DisplayUtils.printSuccess("Refund processing for orderID: "+orderID);

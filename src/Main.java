@@ -75,10 +75,8 @@ public class Main {
                 break;
             } catch (InvalidLoginException e) {
                 System.out.println(e.getMessage());
-                System.out.println("Would you like to try again? (yes/no)");
-                String response = scanner.next().trim().toLowerCase();
-                scanner.nextLine();
-                if (!response.equals("yes") && !response.equals("y")) {
+                boolean retry = InputUtils.readYesNo("Would you like to try again?");
+                if (!retry) {
                     DisplayUtils.printInfo("Returning to main menu...");
                     DisplayUtils.pause();
                     DisplayUtils.clearConsole();
@@ -112,13 +110,12 @@ public class Main {
         DisplayUtils.printBanner();
         DisplayUtils.printHeading("Signup Menu");
         System.out.println("Sign up as: ");
-        System.out.println("1. Admin SignUp");
-        System.out.println("2. VIP SignUp");
-        System.out.println("3. Regular SignUp");
-        System.out.println("4. <-- Go Back");
+        System.out.println("1. VIP SignUp");
+        System.out.println("2. Regular SignUp");
+        System.out.println("3. <-- Go Back");
 
-        int choice = InputUtils.readInt("Enter your choice: ", 1, 4);
-        if (choice == 4) {
+        int choice = InputUtils.readInt("Enter your choice: ", 1, 3);
+        if (choice == 3) {
             System.out.println("Returning to main menu...");
             DisplayUtils.pause();
             DisplayUtils.clearConsole();
@@ -126,18 +123,18 @@ public class Main {
             return; // exit
         }
         System.out.println("Enter name: ");
-        String name = scanner.next();
-        System.out.println("Enter unique ID (Roll no for students, Admin ID for Admins): ");
-        String id = scanner.next();
+        String name = scanner.nextLine().trim();
+        System.out.println("Enter unique ID (Roll no for students): ");
+        String id = scanner.nextLine().trim();
         System.out.println("Enter password: " );
-        String password = scanner.next();
+        String password = scanner.nextLine().trim();
+
 
         User newUser;
         try {
             newUser = switch(choice){
-                case 1 -> new Admin(name, password, id);
-                case 2 -> new VIPCustomer(name, password, id);
-                case 3 -> new RegularCustomer(name, password, id);
+                case 1 -> new VIPCustomer(name, password, id);
+                case 2 -> new RegularCustomer(name, password, id);
                 default -> throw new IllegalArgumentException("Invalid choice");
             };
         } catch (IllegalArgumentException e) {

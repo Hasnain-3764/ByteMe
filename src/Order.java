@@ -17,11 +17,13 @@ public class Order implements Comparable<Order> {
     private final LocalDateTime orderTime;
     private final List<OrderItem> items;
     private OrderStatus status;
-    private String orderID;
+//    private String orderID;
     private String specialRequest;
+    private static int nextOrderID = 1;
+    private int orderID;
 
     public Order(String customerID, Priority priority, List<OrderItem> items, String specialRequest) {
-        this.orderID = UUID.randomUUID().toString();
+        this.orderID = nextOrderID++;
         this.customerID = customerID;
         this.priority = priority;
         this.orderTime = LocalDateTime.now();
@@ -31,10 +33,17 @@ public class Order implements Comparable<Order> {
 
     }
 
-    // getters and setters
-    public String getOrderID(){
+    public int getOrderID() {
         return orderID;
     }
+
+    public void setOrderID(int nextOrderID){
+        orderID = nextOrderID;
+    }
+    // getters and setters
+//    public String getOrderID(){
+//        return orderID;
+//    }
     public OrderStatus getStatus() {
         return status;
     }
@@ -69,10 +78,26 @@ public class Order implements Comparable<Order> {
         return totalPrice;
     }
 
-    public void setStatus(OrderStatus status){
-        this.status = status;
+    public void setStatus(OrderStatus newStatus){
+        if(isValidStatusTransition(this.status, newStatus)){
+            this.status = newStatus;
+        }
+        else{
+            DisplayUtils.printFailure("Invalid status transition from " + this.status + " to " + newStatus);
+        }
     }
-
+    private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus){
+        switch(currentStatus){
+            case RECEIVED:
+                return newStatus == OrderStatus.PREPARING || newStatus == OrderStatus.CANCELED;
+            case PREPARING:
+                return newStatus == OrderStatus.OUT_FOR_DELIVERY || newStatus == OrderStatus.CANCELED;
+            case OUT_FOR_DELIVERY:
+                return newStatus == OrderStatus.DELIVERED || newStatus == OrderStatus.REFUNDED;
+            default:
+                return false;
+        }
+    }
     @Override
     public int compareTo(Order other) {
         int priorityComparison = other.priority.compareTo(this.priority);

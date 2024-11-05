@@ -4,29 +4,31 @@ import java.util.stream.Collectors;
 
 public class VIPCustomer extends Customer{
 
-    private final CustomerService customerService;
+//    private final CustomerService customerService;
 
     public VIPCustomer(String name, String password, String rollNo) {
         super(name, password, rollNo);
-        this.customerService = CustomerService.getInstance();
+//        this.customerService = CustomerService.getInstance();
     }
 
     public void browseMenu(){
+        CustomerService customerService = CustomerService.getInstance();
         customerService.browseMenu();
     }
 
     public void searchMenuItems(String keyword){
+        CustomerService customerService = CustomerService.getInstance();
         customerService.searchMenuItems(keyword);
     }
 
     @Override
     public void placeOrder(Order order) {
+        CustomerService customerService = CustomerService.getInstance();
         try {
             customerService.placeOrder(this, order);
         } catch (DishNotAvailableException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Priority Placing order");
     }
 
 
@@ -55,7 +57,7 @@ public class VIPCustomer extends Customer{
     }
     // implmement
     public void viewExclusiveMenuItems(){
-        System.out.println("VIP Exclusive Menu Items:");
+        DisplayUtils.printHeading("VIP Exclusive Menu Items:");
         List<MenuItem> exclusiveItems = MenuServiceImpl.getInstance().filterVipExclusiveItems()
                 .stream()
                 .filter(MenuItem::isAvailable)
@@ -78,15 +80,21 @@ public class VIPCustomer extends Customer{
             return;
         }
         MenuItem selectedItem = exclusiveItems.get(choice -1);
+        if(!selectedItem.isAvailable()){
+            DisplayUtils.printFailure("Selected item is not available. Can't add to cart.");
+            return;
+        }
         int quantity = InputUtils.readInt("Enter quantity: ", 1, 100);
         this.getCart().addItem(selectedItem, quantity);
         System.out.println(selectedItem.getName() + " added to cart successfully.");
     }
+
     //implement
     public void applyVIPDiscount(){
         System.out.println("VIP Discounts are automatically applied at checkout.");
     }
     public void viewVIPStatistics(){
+        CustomerService customerService = CustomerService.getInstance();
         List<Order> history = customerService.getOrderHistory(this.getLoginID()); // to be reviewed
         int totalOrders = history.size();
         double totalSpent = 0;

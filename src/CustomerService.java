@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerService {
@@ -5,10 +6,13 @@ public class CustomerService {
     private static CustomerService instance;
     private final MenuService menuService;
     private final OrderManager orderManager;
+    private final AuthenticationManager authenticator;
 
     public CustomerService() {
         this.menuService = MenuServiceImpl.getInstance();
         this.orderManager = OrderManagerImpl.getInstance();
+        this.authenticator = AuthenticationManager.getInstance();
+
     }
 
     public static CustomerService getInstance() {
@@ -69,10 +73,13 @@ public class CustomerService {
         boolean isVIP = customer instanceof VIPCustomer;
         orderManager.placeOrder(order,isVIP);
         //add order to custormer history
-        customer.addOrderToHistory(order); //to be implemented
+//        customer.addOrderToHistory(order); //to be implemented // no nneed
         DisplayUtils.printSuccess("Order placed successfully!");
     }
 
+    public List<User> getAllUsers(){
+        return authenticator.getAllUsers();
+    }
 
     public List<Order> getOrderHistory(String customerID){
         return orderManager.getOrderHistory(customerID);

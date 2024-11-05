@@ -3,13 +3,13 @@ import java.util.List;
 
 public abstract class Customer extends User {
     private String rollNo;
-    private List<Order> orderHistory;
+//    private List<Order> orderHistory;
     private Cart cart;
 
     public Customer(String name, String password, String rollNo) {
         super(name, password);
         this.rollNo = rollNo;
-        this.orderHistory = new ArrayList<>();
+//        this.orderHistory = new ArrayList<>();
         this.cart = new Cart();
     }
 
@@ -19,9 +19,9 @@ public abstract class Customer extends User {
     }
 
 
-    public void addOrderToHistory(Order order){
-        orderHistory.add(order);
-    }
+//    public void addOrderToHistory(Order order){
+//        orderHistory.add(order);
+//    }
 
     public void viewOrderHistory(){
         CustomerService customerService = CustomerService.getInstance();

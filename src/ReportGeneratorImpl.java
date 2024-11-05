@@ -39,7 +39,7 @@ public class ReportGeneratorImpl implements ReportGenerator{
         popularItems.sort((a, b) -> b.getValue() - a.getValue());
 
         // Print report
-        System.out.println("Daily Sales Report for " + today);
+        DisplayUtils.printHeading("Daily Sales Report for " + today);
         System.out.println("Total Sales: ₹" + totalSales);
         System.out.println("Total Orders: " + totalOrders);
         System.out.println("Most Popular Items:");
