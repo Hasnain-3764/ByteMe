@@ -33,9 +33,9 @@ public class CustomerService {
             for (MenuItem item : items) {
 //                if (!item.isAvailable()) continue;
                 System.out.printf(
-                        "Name: %s | Price: ₹%.2f | Type: %s | Availability: %s\n",
-                        item.getName(), item.getPrice(), item.getType(),
-                        item.isAvailable() ? "Available" : "Unavailable"
+                        "Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n \n--------------------\n \n",
+                    item.getName(), item.getPrice(), item.getType(),
+                    item.isAvailable() ? "Available":"Unavailable"
                 );
             }
         }
@@ -48,7 +48,7 @@ public class CustomerService {
             System.out.println("No items found.");
         }
         else{
-            results.forEach(result -> System.out.printf("Name: %s | Price: ₹%.2f | Type: %s | Availability: %s\n",
+            results.forEach(result -> System.out.printf("Name: %s\nPrice: ₹%.2f\nType: %s\nAvailability: %s\n \n--------------------\n \n",
                     result.getName(), result.getPrice(), result.getType(),
                     result.isAvailable() ? "Available":"Unavailable"));
         }
@@ -70,7 +70,7 @@ public class CustomerService {
         orderManager.placeOrder(order,isVIP);
         //add order to custormer history
         customer.addOrderToHistory(order); //to be implemented
-        System.out.println("Order placed successfully");
+        DisplayUtils.printSuccess("Order placed successfully!");
     }
 
 

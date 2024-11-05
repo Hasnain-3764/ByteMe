@@ -29,7 +29,7 @@ public class OrderManagerImpl implements OrderManager {
             }
             pendingOrders.offer(order);
             addToOrderHistory(order);
-            System.out.println("Order placed successfully and added to pending orders.");
+            DisplayUtils.printSuccess("Order placed successfully and added to pending orders.");
         }
     }
 
@@ -43,13 +43,19 @@ public class OrderManagerImpl implements OrderManager {
             }
         }
         if(targetOrder != null){
-            pendingOrders.remove(targetOrder);
-            targetOrder.setStatus(Order.OrderStatus.CANCELED);
-            System.out.println("Order cancelled successfully.");
-            return true;
+            if(targetOrder.getStatus() == Order.OrderStatus.RECEIVED || targetOrder.getStatus() == Order.OrderStatus.PREPARING){
+                pendingOrders.remove(targetOrder);
+                targetOrder.setStatus(Order.OrderStatus.CANCELED);
+                DisplayUtils.printSuccess("Order canceled successfully.");
+                return true;
+            }
+            else{
+                DisplayUtils.printFailure("Order cannot be canceled at this stage.");
+                return false;
+            }
         }
         else{
-            System.out.println("Order not found or cannot be canceled.");
+            DisplayUtils.printFailure("Order not found or cannot be canceled.");
             return false;
         }
     }
@@ -93,9 +99,10 @@ public class OrderManagerImpl implements OrderManager {
             if(newStatus != Order.OrderStatus.DELIVERED && newStatus!= Order.OrderStatus.DENIED && newStatus != Order.OrderStatus.REFUNDED){
                 pendingOrders.offer(targetOrder);
             }
-            System.out.println("Order status updated: \n" + targetOrder);
+            DisplayUtils.printSuccess("Order status updated: \n" + targetOrder);
         }
         else{
+            DisplayUtils.printFailure("OrderID " + orderID + " not found in pending orders.");
             throw new OrderNotFoundException("OrderID " + orderID + " not found in pending orders.");
         }
     }
@@ -117,10 +124,10 @@ public class OrderManagerImpl implements OrderManager {
         if(order!=null){
             order.setStatus(Order.OrderStatus.REFUNDED);
             pendingOrders.remove(order);
-            System.out.println("Refund processing for orderID: "+orderID);
+            DisplayUtils.printSuccess("Refund processing for orderID: "+orderID);
         }
         else{
-            System.out.println("OrderID not found");
+            DisplayUtils.printFailure("OrderID not found");
         }
     }
 
@@ -143,6 +150,6 @@ public class OrderManagerImpl implements OrderManager {
     private void denyOrder(Order order){
         order.setStatus(Order.OrderStatus.DENIED);
         pendingOrders.remove(order);
-        System.out.println("Order denied due to item unavailability: \n" + order);
+        DisplayUtils.printFailure("Order denied due to item unavailability: \n" + order);
     }
 }

@@ -21,7 +21,9 @@ public class TerminalInterface {
     // Admin functions
     public void showAdminMenu(Admin admin){
         while(true){
-            System.out.println("\nAdmin Menu:");
+            DisplayUtils.clearConsole();
+            DisplayUtils.printBanner();
+            DisplayUtils.printHeading("Admin Menu");
             System.out.println("1. View All Menu Items");
             System.out.println("2. Add New Menu Item"); // keep updating unlit 0 is pressed
             System.out.println("3. Update Menu Item");
@@ -35,22 +37,72 @@ public class TerminalInterface {
             int choice = InputUtils.readInt("Enter your choice: ", 1, 9);
             List<MenuItem> items = menuService.getAllItems();
             switch(choice){
-                case 1 -> customerService.browseMenu();
-                case 2 -> admin.addMenuItem(createNewItem()); // to be implemented
-                case 3 -> admin.updateMenuItem(chooseItemToUpdate()); // to be implemented
-                case 4 -> admin.removeMenuItem(chooseItemToRemove()); // implement..
-                case 5 -> admin.generateSalesReport(); // to be implemented.
-                case 6 -> admin.trackOrders();
-                case 7 -> adminUpdateOrderStatus(admin);
-                case 8 -> adminProcessRefund(admin); // to be implemented
+                case 1 -> {
+                    if(items.isEmpty()){
+                        DisplayUtils.printFailure("No menu items available.");
+                        DisplayUtils.pause();
+                    }
+                    else{
+                        DisplayUtils.printHeading("===== All Menu Items =====");
+                        for(MenuItem item : items){
+                            System.out.printf("Name: %s | Price: ₹%.2f | Availability: %s | VIP Exclusive: %s\n",
+                                    item.getName(), item.getPrice(),
+                                    item.isAvailable() ? "Available" : "Unavailable",
+                                    item.isVipExclusive() ? "Yes" : "No");
+                        }
+                        DisplayUtils.pause();
+                    }
+                }
+                case 2 -> {
+                    MenuItem newItem = createNewItem();
+                    if(newItem != null){
+                        admin.addMenuItem(newItem);
+                        DisplayUtils.pause();
+                    }
+                }
+                case 3 -> {
+                    MenuItem updatedItem = chooseItemToUpdate();
+                    if(updatedItem != null){
+                        admin.updateMenuItem(updatedItem);
+                        DisplayUtils.pause();
+                    }
+                }
+                case 4 -> {
+                    String itemName = chooseItemToRemove();
+                    if(itemName != null && !itemName.isEmpty()){
+                        admin.removeMenuItem(itemName);
+                        DisplayUtils.pause();
+                    }
+                }
+                case 5 -> {
+                    admin.generateSalesReport();
+                    DisplayUtils.pause();
+                }
+                case 6 -> {
+                    admin.trackOrders();
+                    DisplayUtils.pause();
+                }
+                case 7 -> {
+                    adminUpdateOrderStatus(admin);
+                    DisplayUtils.pause();
+                }
+                case 8 -> {
+                    adminProcessRefund(admin);
+                    DisplayUtils.pause();
+                }
                 case 9 -> {
-                    System.out.println("Logging out...");
+                    DisplayUtils.printSuccess("Logging out...");
+                    DisplayUtils.pause();
                     return;
                 }
-                default -> System.out.println("Invalid choice, try again");
+                default -> {
+                    DisplayUtils.printFailure("Invalid choice, try again.");
+                    DisplayUtils.pause();
+                }
             }
         }
     }
+
 
     private void adminProcessRefund(Admin admin){
         System.out.println("Enter orderID to process refund:");
@@ -87,7 +139,7 @@ public class TerminalInterface {
 
             try {
                 OrderManagerImpl.getInstance().updateOrderStatus(orderID, newStatus);
-                System.out.println("Order status updated successfully.");
+                DisplayUtils.printSuccess("Order status updated successfully.");
                 break; // exit loop upon successful update
             } catch (OrderNotFoundException e) {
                 System.out.println(e.getMessage());
@@ -95,6 +147,8 @@ public class TerminalInterface {
                 String response = scanner.nextLine().trim().toLowerCase();
                 if (!response.equals("yes") && !response.equals("y")) {
                     System.out.println("Returning to Admin Menu...");
+                    DisplayUtils.pause();
+                    DisplayUtils.clearConsole();
                     break;
                 }
             }
@@ -105,7 +159,9 @@ public class TerminalInterface {
 
 
     public void showVIPCustomerMenu(VIPCustomer vipCustomer){
+        DisplayUtils.clearConsole();
         while(true){
+            DisplayUtils.printBanner();
             System.out.println("\nVIP Customer Menu:");
             System.out.println("1. Browse Menu");
             System.out.println("2. Search Menu Items");
@@ -123,7 +179,7 @@ public class TerminalInterface {
             System.out.println("14. View Pending Orders");
             System.out.println("15. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 14);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 15);
 
             switch(choice){
                 case 1 ->  customerService.browseMenu(); // to be implemented
@@ -149,7 +205,9 @@ public class TerminalInterface {
 
                 case 8 -> {
                     List<Order> history = customerService.getOrderHistory(vipCustomer.getLoginID());
+                    DisplayUtils.printHeading("Your Order History");
                     displayOrderHistory(history, vipCustomer);
+                    DisplayUtils.pause();
                 }
 //                case 4 -> vipCustomer.viewOrderHistory();
                 case 9 -> vipCustomer.accessVIPBenefits();
@@ -160,6 +218,7 @@ public class TerminalInterface {
                 case 14 -> viewPendingOrders(vipCustomer);
                 case 15 -> {
                     System.out.println("Logging out...");
+
                     return;
                 }
                 default -> System.out.println("Invalid choice. Try again.");
@@ -168,7 +227,9 @@ public class TerminalInterface {
     }
 
     public void showRegularCustomerMenu(RegularCustomer regularCustomer) {
+        DisplayUtils.clearConsole();
         while (true) {
+            DisplayUtils.printBanner();
             System.out.println("\nRegular Customer Menu:");
             System.out.println("1. Browse Menu");
             System.out.println("2. Search Menu Items");
@@ -187,47 +248,82 @@ public class TerminalInterface {
             System.out.println("15. View Pending Orders"); // New Option
             System.out.println("16. Logout");
 
-            int choice = InputUtils.readInt("Enter your choice: ", 1, 15);
+            int choice = InputUtils.readInt("Enter your choice: ", 1, 16);
 
             switch (choice) {
-                case 1 -> regularCustomer.browseMenu(); // to be implemented
+                case 1 -> {
+                    regularCustomer.browseMenu(); // to be implemented
+                    DisplayUtils.pause();
+                }
                 case 2 -> {
                     System.out.print("Enter keyword to search: ");
                     String keyword = scanner.nextLine();
                     regularCustomer.searchMenuItems(keyword); // to be implemented
+                    DisplayUtils.pause();
                 }
-//                case 3 -> {
-//                    Order order = createOrder(regularCustomer);
-//                    try {
-//                        customerService.placeOrder(regularCustomer, order);
-//                    } catch (DishNotAvailableException e) {
-//                        System.out.println(e.getMessage());
-//                    }
-//                }
-
-                // to be implemented
-                case 3 -> addItemToCart(regularCustomer);
-                case 4 -> viewCart(regularCustomer);
-                case 5 -> modifyCart(regularCustomer);
-                case 6 -> checkOut(regularCustomer);
-                case 7 -> cancelOrder(regularCustomer);
+                case 3 -> {
+                    addItemToCart(regularCustomer);
+                    DisplayUtils.pause();
+                }
+                case 4 -> {
+                    viewCart(regularCustomer);
+                    DisplayUtils.pause();
+                }
+                case 5 -> {
+                    modifyCart(regularCustomer);
+                    DisplayUtils.pause();
+                }
+                case 6 -> {
+                    checkOut(regularCustomer);
+                    DisplayUtils.pause();
+                }
+                case 7 -> {
+                    cancelOrder(regularCustomer);
+                    DisplayUtils.pause();
+                }
                 case 8 -> {
                     List<Order> history = customerService.getOrderHistory(regularCustomer.getLoginID());
+                    DisplayUtils.printHeading("Your Order History");
                     displayOrderHistory(history, regularCustomer);
+                    DisplayUtils.pause();
                 }
-//                case 4 -> regularCustomer.viewOrderHistory();
-                case 9 -> becomeVIP(regularCustomer); // special priveledge for our vips
-                case 10-> regularCustomer.accessRegularBenefits();
-                case 11 -> provideReview(regularCustomer); // to be implemented
-                case 12-> viewItemReviews(); // to be implemented
-                case 13 -> sortMenuItems(regularCustomer);
-                case 14 -> filterMenuItems(regularCustomer);
-                case 15 -> viewPendingOrders(regularCustomer);
+                case 9 -> {
+                    becomeVIP(regularCustomer); // special privilege for our VIPs
+                    DisplayUtils.pause();
+                }
+                case 10 -> {
+                    regularCustomer.accessRegularBenefits();
+                    DisplayUtils.pause();
+                }
+                case 11 -> {
+                    provideReview(regularCustomer); // to be implemented
+                    DisplayUtils.pause();
+                }
+                case 12 -> {
+                    viewItemReviews(); // to be implemented
+                    DisplayUtils.pause();
+                }
+                case 13 -> {
+                    sortMenuItems(regularCustomer);
+                    DisplayUtils.pause();
+                }
+                case 14 -> {
+                    filterMenuItems(regularCustomer);
+                    DisplayUtils.pause();
+                }
+                case 15 -> {
+                    viewPendingOrders(regularCustomer);
+                    DisplayUtils.pause();
+                }
                 case 16 -> {
-                    System.out.println("Logging out...");
+                    DisplayUtils.printSuccess("Logging out...");
+                    DisplayUtils.pause();
                     return; //exit to main menu
                 }
-                default -> System.out.println("Invalid choice. Try again.");
+                default -> {
+                    DisplayUtils.printFailure("Invalid choice. Try again.");
+                    DisplayUtils.pause();
+                }
             }
         }
     }
@@ -368,6 +464,8 @@ public class TerminalInterface {
             int quantity = InputUtils.readInt("Enter the quantity: ", 1, 100);
             customer.getCart().addItem(menuItem, quantity);
             System.out.println(menuItem.getName() + " added to cart successfully.");
+            DisplayUtils.pause();
+            DisplayUtils.clearConsole();
         }
     }
 

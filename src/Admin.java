@@ -24,10 +24,10 @@ public class Admin extends User{
     public void addMenuItem(MenuItem item){
         boolean isAdded = menuService.addMenuItem(item);
         if(isAdded){
-            System.out.println("Item '" + item.getName() + "' has been successfully added to the menu.");
+            DisplayUtils.printSuccess("Item '" + item.getName() + "' has been successfully added to the menu.");
         }
         else{
-            System.out.println("Failed to add item '" + item.getName() + "'. It may already exist.");
+            DisplayUtils.printFailure("Failed to add item '" + item.getName() + "'. It may already exist.");
         }
     }
 

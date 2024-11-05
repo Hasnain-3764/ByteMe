@@ -30,6 +30,7 @@ public class AuthenticationManager {
         if (user != null && user.login(password)) {
             return user;  // Login successful
         }
+        DisplayUtils.printFailure("Invalid ID or password.");
         throw new InvalidLoginException("Invalid ID or password.");
     }
 

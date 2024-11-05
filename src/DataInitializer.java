@@ -4,9 +4,15 @@ import java.util.List;
 public class DataInitializer {
     public static List<User> initializeUsers(){
         List<User> users = new ArrayList<>();
-        users.add(new Admin("Admin1","pswd1","A1"));
-        users.add(new VIPCustomer("vipUser1", "vipPswd1","2023325"));
-        users.add(new RegularCustomer("cust1","custPswd1","2023467"));
+        users.add(new Admin("Admin1", "Admin@1", "A1"));
+        users.add(new Admin("Admin2", "Admin@2", "A2"));
+
+        users.add(new VIPCustomer("VIPUser1", "VIP@1", "V1"));
+        users.add(new VIPCustomer("VIPUser2", "VIP@2", "V2"));
+
+        users.add(new RegularCustomer("Regular1", "Reg@1", "R1"));
+        users.add(new RegularCustomer("Regular2", "Reg@2", "R2"));
+
         return users;
     }
     public static List<MenuItem> initilizeMenuItems(){

@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a7bc7820-c5a0-4cc0-8752-b657a62fc64f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/DisplayUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AuthenticationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/AuthenticationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CustomerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CustomerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/InputUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InputUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OrderManagerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OrderManagerImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TerminalInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TerminalInterface.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
