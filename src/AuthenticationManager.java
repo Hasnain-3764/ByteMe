@@ -1,3 +1,7 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import org.json.*;
 
@@ -10,10 +14,7 @@ public class AuthenticationManager {
     // private constructor to avoid instantiation.
     private AuthenticationManager(){
         userMap = new HashMap<>();
-        List<User> initialUsers = DataInitializer.initializeUsers();
-        for(User user: initialUsers){
-            userMap.put(user.getLoginID(), user);
-        }
+        loadUsersFromFile(); // to be implemented
     }
 
     // to access the only instance(common across all classes)
@@ -43,6 +44,7 @@ public class AuthenticationManager {
             DisplayUtils.printFailure("User already exists.");
         } else {
             userMap.put(user.getLoginID(), user);
+            saveUsersToFile(); // add to json
             DisplayUtils.printSuccess("Signup successful!");
         }
     }
@@ -53,6 +55,7 @@ public class AuthenticationManager {
         String loginID = vipCustomer.getLoginID();
         if(userMap.containsKey(loginID)){
             userMap.put(loginID,vipCustomer);
+            saveUsersToFile(); // update json
             DisplayUtils.printSuccess("User upgraded to VIP successfully.");
         }
         else{
@@ -62,5 +65,35 @@ public class AuthenticationManager {
 
     public List<User> getAllUsers(){
         return new ArrayList<>(userMap.values());
+    }
+
+    public void loadUsersFromFile() {
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(USER_DATA_FILE)));
+            JSONArray usersArray = new JSONArray(content); // array of all users.
+            for (int i = 0; i < usersArray.length(); i++) {
+                JSONObject userJSON = usersArray.getJSONObject(i);
+                User user = User.fromJSON(userJSON);// taking users from userJSON
+                userMap.put(user.getLoginID(), user);// and putting in userMap
+            }
+        } catch (IOException e) {
+            System.out.println("User data file not found. Starting with initial users.");
+            List<User> initialUsers = DataInitializer.initializeUsers();
+            for(User user: initialUsers){
+                userMap.put(user.getLoginID(), user);
+            }
+        }
+    }
+
+    public void saveUsersToFile() {
+        JSONArray usersArray = new JSONArray();
+        for (User user : userMap.values()) {
+            usersArray.put(user.toJSON());
+        }
+        try (FileWriter file = new FileWriter(USER_DATA_FILE)) {
+            file.write(usersArray.toString(4));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

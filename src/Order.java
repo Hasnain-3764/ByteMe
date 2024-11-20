@@ -1,4 +1,8 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +35,48 @@ public class Order implements Comparable<Order> {
         this.status = OrderStatus.RECEIVED;
         this.specialRequest = specialRequest;
 
+    }
+
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        json.put("orderID", this.orderID);
+        json.put("customerID", this.customerID);
+        json.put("priority", this.priority.toString());
+        json.put("orderTime", this.orderTime.toString());
+        json.put("status", this.status.toString());
+        json.put("specialRequest", this.specialRequest);
+
+        JSONArray itemsArray = new JSONArray();
+        for (OrderItem item : items) {
+//            itemsArray.put(item.toJSON()); // to be implemented
+        }
+        json.put("items", itemsArray);
+
+        return json;
+    }
+
+    public static Order fromJSON(JSONObject json) {
+        int orderID = json.getInt("orderID");
+        String customerID = json.getString("customerID");
+        Priority priority = Priority.valueOf(json.getString("priority"));
+        LocalDateTime orderTime = LocalDateTime.parse(json.getString("orderTime"));
+        OrderStatus status = OrderStatus.valueOf(json.getString("status"));
+        String specialRequest = json.getString("specialRequest");
+
+        JSONArray itemsArray = json.getJSONArray("items");
+        List<OrderItem> items = new ArrayList<>();
+        for (int i = 0; i < itemsArray.length(); i++) {
+            JSONObject itemJSON = itemsArray.getJSONObject(i);
+//            OrderItem item = OrderItem.fromJSON(itemJSON); // to be implemented
+//            items.add(item);
+        }
+
+        Order order = new Order(customerID, priority, items, specialRequest);
+        order.setOrderID(orderID);
+        order.setStatus(status);
+//        order.orderTime = orderTime; // some error here
+
+        return order;
     }
 
     public int getOrderID() {
