@@ -1,4 +1,6 @@
 import java.util.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class OrderManagerImpl implements OrderManager {
     private static OrderManagerImpl instance;
@@ -6,6 +8,7 @@ public class OrderManagerImpl implements OrderManager {
     private final PriorityQueue<Order> pendingOrders;
     protected Map<String, List<Order>> orderHistories; // as we want it in other classes too
     private int nextOrderID;
+    private static final String ORDER_DATA_FILE = "data/orders.json";
 
     private OrderManagerImpl() {
         Comparator<Order> orderComparator = Comparator
@@ -14,7 +17,7 @@ public class OrderManagerImpl implements OrderManager {
         pendingOrders = new PriorityQueue<>(orderComparator);
         orderHistories = new HashMap<>();
         nextOrderID = 1; // initialize nextOrderID to 1
-
+//        loadOrdersFromFile();
     }
 
     public static OrderManagerImpl getInstance(){

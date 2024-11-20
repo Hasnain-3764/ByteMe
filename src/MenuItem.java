@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 public class MenuItem {
     private String name;
@@ -30,8 +31,9 @@ public class MenuItem {
 
         // Serialize reviews
         List<JSONObject> reviewList = new ArrayList<>();
+//        JSONArray reviewList = new JSONArray();
         for(Review review : this.reviews){
-//            reviewList.add(review.toJSON()); // to be implemented
+            reviewList.add(review.toJSON()); // to be implemented
         }
         json.put("reviews", reviewList);
 
@@ -48,14 +50,22 @@ public class MenuItem {
         MenuItem item = new MenuItem(name, price, type, availability, vipExclusive);
 
         // Deserialize reviews
-        if(json.has("reviews")){
-            for(Object obj : json.getJSONArray("reviews")){
-                JSONObject reviewJSON = (JSONObject) obj;
+//        if(json.has("reviews")){
+//            for(Object obj : json.getJSONArray("reviews")){
+//                JSONObject reviewJSON = (JSONObject) obj;
 //                Review review = Review.fromJSON(reviewJSON); // to be implemented
 //                item.addReview(review);
+//            }
+//        }
+
+        if(json.has("reviews")){
+            JSONArray reviewsArray = json.getJSONArray("reviews");
+            for(int i = 0; i < reviewsArray.length(); i++){
+                JSONObject reviewJSON = reviewsArray.getJSONObject(i);
+                Review review = Review.fromJSON(reviewJSON);
+                item.addReview(review);
             }
         }
-
         return item;
     }
 

@@ -48,7 +48,7 @@ public class Order implements Comparable<Order> {
 
         JSONArray itemsArray = new JSONArray();
         for (OrderItem item : items) {
-//            itemsArray.put(item.toJSON()); // to be implemented
+            itemsArray.put(item.toJSON()); // to be implemented
         }
         json.put("items", itemsArray);
 
@@ -67,8 +67,8 @@ public class Order implements Comparable<Order> {
         List<OrderItem> items = new ArrayList<>();
         for (int i = 0; i < itemsArray.length(); i++) {
             JSONObject itemJSON = itemsArray.getJSONObject(i);
-//            OrderItem item = OrderItem.fromJSON(itemJSON); // to be implemented
-//            items.add(item);
+            OrderItem item = OrderItem.fromJSON(itemJSON); // to be implemented
+            items.add(item);
         }
 
         Order order = new Order(customerID, priority, items, specialRequest);
