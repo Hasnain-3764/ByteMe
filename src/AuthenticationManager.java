@@ -1,6 +1,8 @@
 import java.util.*;
+import org.json.*;
 
 public class AuthenticationManager {
+    private static final String USER_DATA_FILE = "data/users.json";
     private Map<String, User> userMap;
     private static Scanner scanner = new Scanner(System.in);
     private static AuthenticationManager instance;

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONObject;
 
 public class MenuItem {
     private String name;
@@ -18,6 +19,46 @@ public class MenuItem {
         this.reviews = new ArrayList<>();
 
     }
+
+    public JSONObject toJSON(){
+        JSONObject json = new JSONObject();
+        json.put("name", this.name);
+        json.put("price", this.price);
+        json.put("type", this.type);
+        json.put("availability", this.availability);
+        json.put("vipExclusive", this.vipExclusive);
+
+        // Serialize reviews
+        List<JSONObject> reviewList = new ArrayList<>();
+        for(Review review : this.reviews){
+//            reviewList.add(review.toJSON()); // to be implemented
+        }
+        json.put("reviews", reviewList);
+
+        return json;
+    }
+
+    public static MenuItem fromJSON(JSONObject json){
+        String name = json.getString("name");
+        double price = json.getDouble("price");
+        String type = json.getString("type");
+        boolean availability = json.getBoolean("availability");
+        boolean vipExclusive = json.getBoolean("vipExclusive");
+
+        MenuItem item = new MenuItem(name, price, type, availability, vipExclusive);
+
+        // Deserialize reviews
+        if(json.has("reviews")){
+            for(Object obj : json.getJSONArray("reviews")){
+                JSONObject reviewJSON = (JSONObject) obj;
+//                Review review = Review.fromJSON(reviewJSON); // to be implemented
+//                item.addReview(review);
+            }
+        }
+
+        return item;
+    }
+
 
     public boolean isVipExclusive() {
         return vipExclusive;
@@ -76,6 +117,7 @@ public class MenuItem {
                 ", price=" + price +
                 ", type='" + type + '\'' +
                 ", availability=" + availability +
+                ", vipExclusive=" + vipExclusive +
                 // ordering unavailabe food, can give in DishNotAvailableException(implement)
                 '}';
     }

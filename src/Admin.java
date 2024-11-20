@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.List;
 
-public class Admin extends User{
+public class Admin extends User implements Serializable {
     private String adminId;
 //    private final CustomerService customerService;
     private final MenuService menuService;

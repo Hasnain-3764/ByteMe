@@ -1,6 +1,9 @@
+import java.io.Serializable;
 import java.util.List;
 
-public class RegularCustomer extends Customer {
+public class RegularCustomer extends Customer implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 //    private final CustomerService customerService;
 
     public RegularCustomer(String name, String password, String rollNo) {

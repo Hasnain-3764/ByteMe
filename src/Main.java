@@ -1,4 +1,4 @@
-
+import org.json.*;
 import java.util.Scanner;
 
 public class Main {
@@ -8,6 +8,7 @@ public class Main {
     private static TerminalInterface terminalInterface = new TerminalInterface();
 
     public static void main(String[] args) {
+
         DisplayUtils.clearConsole();
         DisplayUtils.printBanner();
         while (true) {

@@ -1,6 +1,9 @@
-public abstract class User {
+import java.io.Serializable;
+
+public abstract class User implements Serializable {
     protected String name;
     protected String password;
+    private static final long serialVersionUID = 1L;
 
     public User(String name, String password) {
         this.name = name;
