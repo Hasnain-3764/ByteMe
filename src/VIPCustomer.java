@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.awt.*;
 import java.io.Serializable;
 import java.util.List;
@@ -10,6 +12,23 @@ public class VIPCustomer extends Customer implements Serializable {
     public VIPCustomer(String name, String password, String rollNo) {
         super(name, password, rollNo);
 //        this.customerService = CustomerService.getInstance();
+    }
+
+    @Override
+    public JSONObject toJSON(){
+        JSONObject json = new JSONObject();
+        json.put("type", "VIPCustomer");
+        json.put("name", this.name);
+        json.put("password", this.password);
+        json.put("rollNo", this.getLoginID());
+        return json;
+    }
+
+    public static VIPCustomer fromJSON(JSONObject json){
+        String name = json.getString("name");
+        String password = json.getString("password");
+        String rollNo = json.getString("rollNo");
+        return new VIPCustomer(name, password, rollNo);
     }
 
     public void browseMenu(){

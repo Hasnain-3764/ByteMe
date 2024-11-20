@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +11,23 @@ public class RegularCustomer extends Customer implements Serializable {
     public RegularCustomer(String name, String password, String rollNo) {
         super(name, password, rollNo);
 //        this.customerService = CustomerService.getInstance();
+    }
+
+    @Override
+    public JSONObject toJSON(){
+        JSONObject json = new JSONObject();
+        json.put("type", "RegularCustomer");
+        json.put("name", this.name);
+        json.put("password", this.password);
+        json.put("rollNo", this.getLoginID());
+        return json;
+    }
+
+    public static RegularCustomer fromJSON(JSONObject json){
+        String name = json.getString("name");
+        String password = json.getString("password");
+        String rollNo = json.getString("rollNo");
+        return new RegularCustomer(name, password, rollNo);
     }
 
     public void browseMenu(){

@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 public class Review {
     private String customerID;
     private String itemName;
@@ -10,6 +12,24 @@ public class Review {
         this.reviewText = reviewText;
         this.rating = rating;
     }
+
+    public JSONObject toJSON(){
+        JSONObject json = new JSONObject();
+        json.put("customerID", this.customerID);
+        json.put("itemName", this.itemName);
+        json.put("reviewText", this.reviewText);
+        json.put("rating", this.rating);
+        return json;
+    }
+
+    public static Review fromJSON(JSONObject json){
+        String customerID = json.getString("customerID");
+        String itemName = json.getString("itemName");
+        String reviewText = json.getString("reviewText");
+        int rating = json.getInt("rating");
+        return new Review(customerID, itemName, reviewText, rating);
+    }
+
     // getter or setters
     public String getCustomerID(){
         return customerID;

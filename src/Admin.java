@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +17,23 @@ public class Admin extends User implements Serializable {
         this.menuService = MenuServiceImpl.getInstance();
         this.orderManager = OrderManagerImpl.getInstance(); // Initialize orderManager
         this.reportGenerator = new ReportGeneratorImpl();
+    }
+
+    @Override
+    public JSONObject toJSON(){
+        JSONObject json = new JSONObject();
+        json.put("type", "Admin");
+        json.put("name", this.name);
+        json.put("password", this.password);
+        json.put("adminId", this.adminId);
+        return json;
+    }
+
+    public static Admin fromJSON(JSONObject json){
+        String name = json.getString("name");
+        String password = json.getString("password");
+        String adminId = json.getString("adminId");
+        return new Admin(name, password, adminId);
     }
 
 
