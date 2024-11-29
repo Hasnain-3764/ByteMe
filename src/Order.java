@@ -37,6 +37,17 @@ public class Order implements Comparable<Order> {
 
     }
 
+    public Order(int orderID, String customerID, Priority priority, LocalDateTime orderTime, List<OrderItem> items, String specialRequest, OrderStatus status) {
+        this.orderID = orderID;
+        this.customerID = customerID;
+        this.priority = priority;
+        this.orderTime = orderTime;
+        this.items = items;
+        this.status = status;
+        this.specialRequest = specialRequest;
+    }
+
+
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         json.put("orderID", this.orderID);
@@ -56,6 +67,7 @@ public class Order implements Comparable<Order> {
     }
 
     public static Order fromJSON(JSONObject json) {
+
         int orderID = json.getInt("orderID");
         String customerID = json.getString("customerID");
         Priority priority = Priority.valueOf(json.getString("priority"));
@@ -67,17 +79,17 @@ public class Order implements Comparable<Order> {
         List<OrderItem> items = new ArrayList<>();
         for (int i = 0; i < itemsArray.length(); i++) {
             JSONObject itemJSON = itemsArray.getJSONObject(i);
-            OrderItem item = OrderItem.fromJSON(itemJSON); // to be implemented
+            OrderItem item = OrderItem.fromJSON(itemJSON);
             items.add(item);
         }
 
-        Order order = new Order(customerID, priority, items, specialRequest);
+        Order order = new Order(orderID, customerID, priority, orderTime, items, specialRequest, status);
         order.setOrderID(orderID);
-        order.setStatus(status);
-//        order.orderTime = orderTime; // some error here
+        order.status = status; // Set status directly without validation
 
         return order;
     }
+
 
     public int getOrderID() {
         return orderID;
@@ -103,15 +115,12 @@ public class Order implements Comparable<Order> {
     public Priority getPriority() {
         return priority;
     }
-
     public LocalDateTime getOrderTime() {
         return orderTime;
     }
-
     public List<OrderItem> getItems() {
         return items;
     }
-
     public double getTotalPrice(){
         double totalPrice = 0;
         for(OrderItem item : items){
@@ -132,18 +141,23 @@ public class Order implements Comparable<Order> {
             DisplayUtils.printFailure("Invalid status transition from " + this.status + " to " + newStatus);
         }
     }
+
     private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus){
+        if(currentStatus == newStatus){
+            return true;
+        }
         switch(currentStatus){
             case RECEIVED:
                 return newStatus == OrderStatus.PREPARING || newStatus == OrderStatus.CANCELED;
             case PREPARING:
                 return newStatus == OrderStatus.OUT_FOR_DELIVERY || newStatus == OrderStatus.CANCELED;
             case OUT_FOR_DELIVERY:
-                return newStatus == OrderStatus.DELIVERED || newStatus == OrderStatus.REFUNDED;
+                return newStatus == Order.OrderStatus.DELIVERED || newStatus == Order.OrderStatus.REFUNDED;
             default:
                 return false;
         }
     }
+
     @Override
     public int compareTo(Order other) {
         int priorityComparison = other.priority.compareTo(this.priority);

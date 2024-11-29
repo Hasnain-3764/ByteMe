@@ -21,6 +21,11 @@ public class CustomerService {
         }
         return instance;
     }
+
+    public static void resetInstance() {
+        instance = null;
+    }
+
     public void browseMenu(){
         System.out.println("Canteen Menu");
         List<MenuItem> items = menuService.getAllItems();

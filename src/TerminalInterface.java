@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,8 +79,7 @@ public class TerminalInterface {
                     DisplayUtils.pause();
                 }
                 case 6 -> {
-                    admin.trackOrders();
-                    DisplayUtils.pause();
+                    showPendingOrdersGUI();;
                 }
                 case 7 -> {
                     adminUpdateOrderStatus(admin);
@@ -182,7 +182,7 @@ public class TerminalInterface {
             int choice = InputUtils.readInt("Enter your choice: ", 1, 15);
 
             switch(choice){
-                case 1 ->  customerService.browseMenu(); // to be implemented
+                case 1 ->  showMenuGUI();
                 case 2 -> {
                     System.out.print("Enter keyword to search: ");
                     String keyword = scanner.nextLine().trim();
@@ -442,52 +442,6 @@ public class TerminalInterface {
         DisplayUtils.pause();
         DisplayUtils.clearConsole();
     }
-
-
-//    private void addItemToCart(Customer customer){
-//        System.out.println("Enter the name of the item to add to your cart: ");
-//        String itemName = scanner.nextLine().trim();
-//        List<MenuItem> searchResults = menuService.searchItems(itemName);
-//        if(searchResults.isEmpty()){
-//            System.out.println("No items found matching \"" + itemName + "\". Please try again.");
-//            return;
-//        }
-//        else if(searchResults.size() > 1){
-//            System.out.println("Multiple items found:");
-//            for(int i = 0; i < searchResults.size(); i++){
-//                MenuItem item = searchResults.get(i);
-//                System.out.printf("%d. Name: %s | Price: ₹%.2f | Type: %s | Availability: %s\n",
-//                        i+1, item.getName(), item.getPrice(), item.getType(),
-//                        item.isAvailable() ? "Available" : "Unavailable");
-//            }
-//            System.out.println((searchResults.size()+1) + ". Cancel");
-//            int choice = InputUtils.readInt("Select the item number to add to cart or cancel: ", 1, searchResults.size()+1);
-//            if(choice == searchResults.size()+1){
-//                DisplayUtils.printFailure("Add to cart canceled.");
-//                return;
-//            }
-//            MenuItem selectedItem = searchResults.get(choice-1);
-//            if(!selectedItem.isAvailable()){
-//                DisplayUtils.printFailure("Selected item is not available. Can't add to cart.");
-//                return;
-//            }
-//            int quantity = InputUtils.readInt("Enter the quantity: ", 1, 100);
-//            customer.getCart().addItem(selectedItem, quantity);
-//            DisplayUtils.printSuccess(selectedItem.getName() + " added to cart successfully.");
-//        }
-//        else{
-//            MenuItem menuItem = searchResults.get(0);
-//            if(!menuItem.isAvailable()){
-//                DisplayUtils.printFailure("Item is not available. Can't add to cart.");
-//                return;
-//            }
-//            int quantity = InputUtils.readInt("Enter the quantity: ", 1, 100);
-//            customer.getCart().addItem(menuItem, quantity);
-//            DisplayUtils.printSuccess(menuItem.getName() + " added to cart successfully.");
-//            DisplayUtils.pause();
-//            DisplayUtils.clearConsole();
-//        }
-//    }
 
 
     private void viewCart(Customer customer){
@@ -924,6 +878,17 @@ public class TerminalInterface {
         }
     }
 
+    public void showMenuGUI() {
+        SwingUtilities.invokeLater(() -> {
+            new MenuDisplayGUI();
+        });
+    }
+
+    public void showPendingOrdersGUI() {
+        SwingUtilities.invokeLater(() -> {
+            new PendingOrdersGUI();
+        });
+    }
 
 
 }

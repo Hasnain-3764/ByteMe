@@ -11,4 +11,7 @@ public interface MenuService {
     List<MenuItem> filterItemsByAvailability(boolean available); // sort based on availability
     List<MenuItem> filterVipExclusiveItems(); // VIP-exclusive items
 
+    void loadMenuItemsFromFile();
+
+    void saveMenuItemsToFile();
 }

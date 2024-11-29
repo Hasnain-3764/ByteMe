@@ -49,7 +49,9 @@ public class AuthenticationManager {
         }
     }
 
-
+    public static void resetInstance() {
+        instance = null;
+    }
 
     public void upgradeToVIP(VIPCustomer vipCustomer){
         String loginID = vipCustomer.getLoginID();

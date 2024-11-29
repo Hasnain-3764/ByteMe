@@ -1,4 +1,5 @@
-import org.json.*;
+// File: Main.java
+import javax.swing.SwingUtilities;
 import java.util.Scanner;
 
 public class Main {
@@ -22,12 +23,22 @@ public class Main {
                 case 2 -> handleSignup();
                 case 3 -> {
                     System.out.println("Exiting the application. Goodbye!");
-                    System.exit(0);
+                    // Save data before exiting
+                    authenticator.saveUsersToFile();
+                    menuService.saveMenuItemsToFile();
+                    OrderManagerImpl.getInstance().saveOrdersToFile();
+
+                    // Launch GUI after CLI session ends
+                    System.out.println("Launching GUI to display menu and pending orders...");
+                    SwingUtilities.invokeLater(() -> new GUIApp());
+
+                    return;
                 }
                 default -> System.out.println("Invalid choice, please try again.");
             }
         }
     }
+
     private static void handleLogin() {
         while (true) {
             DisplayUtils.printHeading("Login Menu");
@@ -46,14 +57,15 @@ public class Main {
             }
 
             switch (choice) {
-                case 1 -> adminLogin(); // for printing only. the logic is same for all users
+                case 1 -> adminLogin();
                 case 2 -> vipLogin();
                 case 3 -> regularLogin();
                 default -> {
                     DisplayUtils.printFailure("Invalid choice, please try again.");
                     DisplayUtils.pause();
                     continue;
-                }            }
+                }
+            }
 
             String id = scanner.nextLine().trim();
             System.out.println("Enter password: ");
@@ -87,26 +99,26 @@ public class Main {
             }
         }
     }
-    private static void regularLogin(){
+
+    private static void regularLogin() {
         System.out.println("Hello Users");
         System.out.println("To confirm it's you, please: ");
         System.out.println("Enter your Roll No");
     }
 
-    private static void vipLogin(){
+    private static void vipLogin() {
         System.out.println("Hello VIP Users");
         System.out.println("To confirm it's you, please: ");
         System.out.println("Enter your Roll No");
     }
 
-    private static void adminLogin(){
+    private static void adminLogin() {
         System.out.println("Hello Admins");
-        System.out.println("To confirm its you, please: ");
+        System.out.println("To confirm it's you, please: ");
         System.out.println("Enter your unique Admin ID");
     }
 
-
-    private static void handleSignup(){
+    private static void handleSignup() {
         DisplayUtils.clearConsole();
         DisplayUtils.printBanner();
         DisplayUtils.printHeading("Signup Menu");
@@ -121,19 +133,18 @@ public class Main {
             DisplayUtils.pause();
             DisplayUtils.clearConsole();
             DisplayUtils.printBanner();
-            return; // exit
+            return;
         }
         System.out.println("Enter name: ");
         String name = scanner.nextLine().trim();
         System.out.println("Enter unique ID (Roll no for students): ");
         String id = scanner.nextLine().trim();
-        System.out.println("Enter password: " );
+        System.out.println("Enter password: ");
         String password = scanner.nextLine().trim();
-
 
         User newUser;
         try {
-            newUser = switch(choice){
+            newUser = switch (choice) {
                 case 1 -> new VIPCustomer(name, password, id);
                 case 2 -> new RegularCustomer(name, password, id);
                 default -> throw new IllegalArgumentException("Invalid choice");
@@ -150,5 +161,4 @@ public class Main {
         DisplayUtils.clearConsole();
         DisplayUtils.printBanner();
     }
-
 }
